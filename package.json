@@ -1,0 +1,31 @@
+{
+  "name": "@ekman/async-collection",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "example": "node example/example.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@tsconfig/node22": "^22.0.2",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.0",
+    "ts-jest": "^29.4.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
+  },
+  "maintainers": [
+    {
+      "email": "nikl.ekman@gmail.com",
+      "name": "Niklas Ekman",
+      "url": "https://www.niklasekman.solutions"
+    }
+  ]
+}
