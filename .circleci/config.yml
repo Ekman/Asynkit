@@ -10,8 +10,9 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm run build
-      - run: mkdir -p /tmp/artifact && cp --recursive dist /tmp/artifact/ && cp package.json /tmp/artifact/
-      - run: npm --dir /tmp/artifact publish
+      - run: mkdir -p /tmp/artifact && cp --recursive dist /tmp/artifact/
+      - run: jq --arg ver "0.1.0" '.version = $ver' package.json > /tmp/artifact/package.json
+      - run: npm --prefix /tmp/artifact publish
 workflows:
   unit-test:
     jobs:
