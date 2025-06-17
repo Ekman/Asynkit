@@ -12,7 +12,7 @@ jobs:
       - run: npm run build
       - run: mkdir -p /tmp/artifact && cp --recursive dist /tmp/artifact/
       - run: jq --arg ver "0.1.0" '.version = $ver' package.json > /tmp/artifact/package.json
-      - run: cat /tmp/artifact/package.json
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > /tmp/artifact/.npmrc
       - run: npm --prefix /tmp/artifact publish
 workflows:
   unit-test:
