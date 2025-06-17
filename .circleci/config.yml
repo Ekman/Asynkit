@@ -30,9 +30,9 @@ workflows:
             name: node/default
             resource_class: small
         filters:
-          tags:
-            only: /\d+\.\d+\.\d+/
           branches:
+            only: /.*/
+          tags:
             only: /.*/
       - deploy:
           requires: [ *unit_test ]
