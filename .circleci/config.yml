@@ -10,9 +10,16 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm run build
-      - run: jq --arg ver "0.1.0" '.version = $ver' package.json > /tmp/package.json && mv /tmp/package.json package.json
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
-      - run: npm publish
+      - run:
+          name: Set version in package.json
+          command: |-
+            jq --arg ver "$CIRCLE_TAG" '.version = $ver' package.json >
+            /tmp/package.json && mv /tmp/package.json package.json
+      - run:
+          name: NPM publis
+          command: >-
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+            npm publish
 workflows:
   unit-test:
     jobs:
@@ -25,3 +32,8 @@ workflows:
     jobs:
       - deploy:
           context: [npm]
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
