@@ -1,13 +1,15 @@
 import type {AsynkitInterface, Filter, Map} from "./interface.js";
 import {
-    asynkitChunk,
-    asynkitFilter,
-    asynkitFirst,
-    asynkitFirstOrDefault,
-    asynkitFromArray,
-    asynkitIsEmpty,
-    asynkitMap,
-    asynkitToArray
+	asynkitAppend,
+	asynkitChunk,
+	asynkitFilter,
+	asynkitFirst,
+	asynkitFirstOrDefault,
+	asynkitFromArray,
+	asynkitIsEmpty,
+	asynkitMap,
+	asynkitPrepend,
+	asynkitToArray
 } from "./functions.js";
 
 /**
@@ -86,4 +88,18 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
     chunk(chunkSize: number): AsynkitInterface<TInput[]> {
         return new Asynkit(asynkitChunk(this.it, chunkSize));
     }
+
+	/**
+	 * @inheritDoc
+	 */
+	append(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput> {
+		return new Asynkit(asynkitAppend(this.it, ...values));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	prepend(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput> {
+		return new Asynkit(asynkitPrepend(this.it, ...values));
+	}
 }

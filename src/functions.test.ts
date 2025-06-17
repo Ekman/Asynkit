@@ -1,8 +1,9 @@
 import {
+	asynkitAppend,
 	asynkitFilter, asynkitFirst,
 	asynkitFirstOrDefault,
 	asynkitFromArray,
-	asynkitMap
+	asynkitMap, asynkitPrepend
 } from "./functions.js";
 import {utilTestRun} from "./utils-test.js";
 import {AsyncCollectionEmptyError} from "./errors.js";
@@ -47,5 +48,23 @@ describe("functions", () => {
 		}
 
 		await expect(result).rejects.toThrow(AsyncCollectionEmptyError);
+	})
+
+	it("should be able to append a value", async () => {
+		const result = await utilTestRun(
+			[1, 2, 3, 4],
+			it => asynkitAppend(it, 100),
+		);
+
+		expect(result).toEqual([100, 1, 2, 3, 4]);
+	})
+
+	it("should be able to prepend a value", async () => {
+		const result = await utilTestRun(
+			[1, 2, 3, 4],
+			it => asynkitPrepend(it, 23),
+		);
+
+		expect(result).toEqual([1, 2, 3, 4, 23]);
 	})
 })

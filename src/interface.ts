@@ -45,4 +45,16 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
      * @param chunkSize
      */
     chunk(chunkSize: number): AsynkitInterface<TInput[]>;
+
+	/**
+	 * Append a value
+	 * @param values
+	 */
+		append(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput>;
+
+	/**
+	 * Prepend a value
+	 * @param values
+	 */
+		prepend(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput>;
 }

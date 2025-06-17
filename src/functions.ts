@@ -106,3 +106,33 @@ export async function* asynkitChunk<TInput>(it: AsyncIterable<TInput>, chunkSize
         yield chunk;
     }
 }
+
+/**
+ * Append a value
+ * @param it
+ * @param values
+ */
+export async function* asynkitAppend<TInput>(it: AsyncIterable<TInput>, ...values: ReadonlyArray<TInput>): AsyncIterable<TInput> {
+	for (const value of values) {
+		yield value;
+	}
+
+	for await (const item of it) {
+		yield item;
+	}
+}
+
+/**
+ * Prepend a value
+ * @param it
+ * @param values
+ */
+export async function* asynkitPrepend<TInput>(it: AsyncIterable<TInput>, ...values: ReadonlyArray<TInput>): AsyncIterable<TInput> {
+	for await (const item of it) {
+		yield item;
+	}
+
+	for (const value of values) {
+		yield value;
+	}
+}
