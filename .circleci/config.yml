@@ -16,7 +16,7 @@ jobs:
             jq --arg ver "$CIRCLE_TAG" '.version = $ver' package.json >
             /tmp/package.json && mv /tmp/package.json package.json
       - run:
-          name: NPM publis
+          name: NPM publish
           command: |-
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
             npm publish --access=public
