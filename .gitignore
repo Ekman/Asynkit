@@ -13,3 +13,4 @@ yarn-error.log*
 package-lock.json
 dist
 tsconfig.tsbuildinfo
+junit.xml
