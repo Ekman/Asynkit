@@ -46,6 +46,6 @@ describe("functions", () => {
 			);
 		}
 
-		expect(result).toThrow(AsyncCollectionEmptyError);
+		await expect(result).rejects.toThrow(AsyncCollectionEmptyError);
 	})
 })
