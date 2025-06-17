@@ -9,7 +9,7 @@ executors:
 jobs:
   unit-test:
     docker:
-      - image: cimg/base
+      - image: cimg/base:latest
     resource_class: small
     steps:
       - checkout
@@ -23,3 +23,6 @@ workflows:
       - node/test:
           test-results-for: jest
           executor: node
+          filters:
+            branches:
+
