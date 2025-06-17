@@ -1,5 +1,5 @@
 {
-  "name": "@ekman/async-collection",
+  "name": "async-iterable-collection",
   "version": "1.0.0",
   "description": "",
   "type": "module",
