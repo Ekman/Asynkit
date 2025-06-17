@@ -4,7 +4,7 @@ orbs:
 executors:
   node:
     docker:
-      - image: cimg/base:current
+      - image: cimg/node:current
     resource_class: small
 jobs:
   unit-test:
@@ -22,4 +22,6 @@ workflows:
     jobs:
       - node/test:
           test-results-for: jest
-          executor: node
+          executor:
+            name: node/default
+            resource_class: small
