@@ -23,6 +23,3 @@ workflows:
       - node/test:
           test-results-for: jest
           executor: node
-          filters:
-            branches:
-
