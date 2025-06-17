@@ -29,7 +29,7 @@ workflows:
             name: node/default
             resource_class: small
       - deploy:
-          requires: [node/test]
+          requires: [ node/test ]
           context: [ npm ]
           filters:
             tags:
