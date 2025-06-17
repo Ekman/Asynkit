@@ -19,7 +19,7 @@ jobs:
           name: NPM publis
           command: |-
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
-            npm publish
+            npm publish --access=public
 workflows:
   main:
     jobs:
