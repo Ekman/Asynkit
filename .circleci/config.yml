@@ -24,4 +24,5 @@ workflows:
             resource_class: small
   deploy:
     jobs:
-      - deploy
+      - deploy:
+          context: [npm]
