@@ -1,5 +1,5 @@
 import {Filter, Map} from "./interface.js";
-import {AsyncCollectionEmptyError} from "./errors.js";
+import {AsynkitEmptyError} from "./errors.js";
 
 /**
  * Convert an array into an async iterable
@@ -65,7 +65,7 @@ export async function asynkitFirstOrDefault<TInput>(it: AsyncIterable<TInput>, d
 /**
  * Get the first value or throw an exception
  * @param it
- * @throws {AsyncCollectionEmptyError}
+ * @throws {AsynkitEmptyError}
  */
 export async function asynkitFirst<TInput>(it: AsyncIterable<TInput>): Promise<TInput> {
     const first = await asynkitFirstOrDefault(it, undefined);
@@ -74,7 +74,7 @@ export async function asynkitFirst<TInput>(it: AsyncIterable<TInput>): Promise<T
         return first;
     }
 
-    throw new AsyncCollectionEmptyError("Async iterable is empty");
+    throw new AsynkitEmptyError("Async iterable is empty");
 }
 
 /**

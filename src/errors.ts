@@ -1,2 +1,2 @@
-export class AsyncCollectionError extends Error {}
-export class AsyncCollectionEmptyError extends AsyncCollectionError {}
+export class AsynkitError extends Error {}
+export class AsynkitEmptyError extends AsynkitError {}

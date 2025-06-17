@@ -6,7 +6,7 @@ import {
 	asynkitMap, asynkitPrepend
 } from "./functions.js";
 import {utilTestRun} from "./utils-test.js";
-import {AsyncCollectionEmptyError} from "./errors.js";
+import {AsynkitEmptyError} from "./errors.js";
 
 describe("functions", () => {
     it("should be able to map", async () => {
@@ -47,7 +47,7 @@ describe("functions", () => {
 			);
 		}
 
-		await expect(result).rejects.toThrow(AsyncCollectionEmptyError);
+		await expect(result).rejects.toThrow(AsynkitEmptyError);
 	})
 
 	it("should be able to append a value", async () => {
