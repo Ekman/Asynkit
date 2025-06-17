@@ -12,12 +12,12 @@ jobs:
       - run: npm run build
       - run:
           name: Set version in package.json
-          command: |-
+          command: >-
             jq --arg ver "$CIRCLE_TAG" '.version = $ver' package.json >
             /tmp/package.json && mv /tmp/package.json package.json
       - run:
           name: NPM publis
-          command: >-
+          command: |-
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
             npm publish
 workflows:
