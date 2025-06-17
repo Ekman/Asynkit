@@ -1,27 +1,38 @@
 version: 2.1
 orbs:
   node: circleci/node@7
-executors:
-  node:
-    docker:
-      - image: cimg/node:current
-    resource_class: small
 jobs:
-  unit-test:
-    docker:
-      - image: cimg/base:latest
-    resource_class: small
+  deploy:
+    executor:
+      name: node/default
+      resource_class: small
     steps:
       - checkout
-      - node/install:
-          node-version: 22
-      - node/test:
-          test-results-for: jest
+      - node/install-packages
+      - run: npm run build
+      - run:
+          name: Set version in package.json
+          command: |-
+            jq --arg ver "$CIRCLE_TAG" '.version = $ver' package.json >
+            /tmp/package.json && mv /tmp/package.json package.json
+      - run:
+          name: NPM publis
+          command: >-
+            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+            npm publish
 workflows:
-  unit-test:
+  test-n-deploy:
     jobs:
       - node/test:
           test-results-for: jest
           executor:
             name: node/default
             resource_class: small
+      - deploy:
+          requires: [ node/test ]
+          context: [ npm ]
+          filters:
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/

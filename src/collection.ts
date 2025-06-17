@@ -1,35 +1,35 @@
-import type {AsyncCollectionInterface, Filter, Map} from "./interface.js";
+import type {AsynkitInterface, Filter, Map} from "./interface.js";
 import {
-    asyncIterableChunk,
-    asyncIterableFilter,
-    asyncIterableFirst,
-    asyncIterableFirstOrDefault,
-    asyncIterableFromArray,
-    asyncIterableIsEmpty,
-    asyncIterableMap,
-    asyncIterableToArray
+    asynkitChunk,
+    asynkitFilter,
+    asynkitFirst,
+    asynkitFirstOrDefault,
+    asynkitFromArray,
+    asynkitIsEmpty,
+    asynkitMap,
+    asynkitToArray
 } from "./functions.js";
 
 /**
  * Main implementation of an async collection
  */
-export class AsyncCollection<TInput> implements AsyncCollectionInterface<TInput> {
+export class Asynkit<TInput> implements AsynkitInterface<TInput> {
     constructor(private readonly it: AsyncIterable<TInput>) {}
 
     /**
      * Create a new instance and return an interface
      * @param it
      */
-    static create<TInput>(it: AsyncIterable<TInput>): AsyncCollectionInterface<TInput> {
-        return new AsyncCollection<TInput>(it);
+    static create<TInput>(it: AsyncIterable<TInput>): AsynkitInterface<TInput> {
+        return new Asynkit<TInput>(it);
     }
 
     /**
      * Creates a new instance from an array
      * @param array
      */
-    static fromArray<TInput>(array: ReadonlyArray<TInput>): AsyncCollection<TInput> {
-        return new AsyncCollection<TInput>(asyncIterableFromArray<TInput>(array));
+    static fromArray<TInput>(array: ReadonlyArray<TInput>): Asynkit<TInput> {
+        return new Asynkit<TInput>(asynkitFromArray<TInput>(array));
     }
 
     async *[Symbol.asyncIterator](): AsyncIterator<TInput> {
@@ -41,49 +41,49 @@ export class AsyncCollection<TInput> implements AsyncCollectionInterface<TInput>
     /**
      * @inheritDoc
      */
-    map<TReturn>(map: Map<TInput, TReturn>): AsyncCollectionInterface<TReturn> {
-        return new AsyncCollection(asyncIterableMap(this.it, map));
+    map<TReturn>(map: Map<TInput, TReturn>): AsynkitInterface<TReturn> {
+        return new Asynkit(asynkitMap(this.it, map));
     }
 
     /**
      * @inheritDoc
      */
-    filter(filter: Filter<TInput>): AsyncCollectionInterface<TInput> {
-        return new AsyncCollection(asyncIterableFilter(this.it, filter));
+    filter(filter: Filter<TInput>): AsynkitInterface<TInput> {
+        return new Asynkit(asynkitFilter(this.it, filter));
     }
 
     /**
      * @inheritDoc
      */
     toArray(): Promise<TInput[]> {
-        return asyncIterableToArray(this.it);
+        return asynkitToArray(this.it);
     }
 
     /**
      * @inheritDoc
      */
     firstOrDefault(def: TInput): Promise<TInput> {
-        return asyncIterableFirstOrDefault(this.it, def);
+        return asynkitFirstOrDefault(this.it, def);
     }
 
     /**
      * @inheritDoc
      */
     first(): Promise<TInput> {
-        return asyncIterableFirst(this.it);
+        return asynkitFirst(this.it);
     }
 
     /**
      * @inheritDoc
      */
     isEmpty(): Promise<boolean> {
-        return asyncIterableIsEmpty(this.it);
+        return asynkitIsEmpty(this.it);
     }
 
     /**
      * @inheritDoc
      */
-    chunk(chunkSize: number): AsyncCollectionInterface<TInput[]> {
-        return new AsyncCollection(asyncIterableChunk(this.it, chunkSize));
+    chunk(chunkSize: number): AsynkitInterface<TInput[]> {
+        return new Asynkit(asynkitChunk(this.it, chunkSize));
     }
 }

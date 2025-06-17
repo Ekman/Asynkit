@@ -5,18 +5,18 @@ export type Filter<TInput> = (value: TInput) => PromiseOrValue<boolean>;
 /**
  * Acts as an async iterable and adds chainable operations
  */
-export interface AsyncCollectionInterface<TInput> extends AsyncIterable<TInput> {
+export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
     /**
      * Convert the input into a new value
      * @param map
      */
-    map<TReturn>(map: Map<TInput, TReturn>): AsyncCollectionInterface<TReturn>;
+    map<TReturn>(map: Map<TInput, TReturn>): AsynkitInterface<TReturn>;
 
     /**
      * Only include values that pass the filter
      * @param filter
      */
-    filter(filter: Filter<TInput>): AsyncCollectionInterface<TInput>;
+    filter(filter: Filter<TInput>): AsynkitInterface<TInput>;
 
     /**
      * Convert to an array
@@ -44,5 +44,5 @@ export interface AsyncCollectionInterface<TInput> extends AsyncIterable<TInput> 
      * Split the async iterable into arrays with max size of chunkSize
      * @param chunkSize
      */
-    chunk(chunkSize: number): AsyncCollectionInterface<TInput[]>;
+    chunk(chunkSize: number): AsynkitInterface<TInput[]>;
 }
