@@ -24,22 +24,16 @@ workflows:
   main:
     jobs:
       - node/test:
-          name: &unit_test unit_test
+          name: unit_test
           test-results-for: jest
           executor:
             name: node/default
             resource_class: small
-        filters:
-          branches:
-            only: /.*/
-          tags:
-            only: /.*/
       - deploy:
-          requires: [ *unit_test ]
           context: [ npm ]
           filters:
             tags:
-              only: /\d+\.\d+\.\d+/
+              only: /^\d+\.\d+\.\d+$/
             branches:
               ignore: /.*/
 
