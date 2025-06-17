@@ -10,10 +10,9 @@ jobs:
       - checkout
       - node/install-packages
       - run: npm run build
-      - run: mkdir -p /tmp/artifact && cp --recursive dist /tmp/artifact/
-      - run: jq --arg ver "0.1.0" '.version = $ver' package.json > /tmp/artifact/package.json
-      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > /tmp/artifact/.npmrc
-      - run: npm --prefix /tmp/artifact publish
+      - run: jq --arg ver "0.1.0" '.version = $ver' package.json > /tmp/package.json && mv /tmp/package.json package.json
+      - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+      - run: npm publish
 workflows:
   unit-test:
     jobs:
