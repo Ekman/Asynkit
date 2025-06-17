@@ -21,15 +21,16 @@ jobs:
             echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
             npm publish
 workflows:
-  test-n-deploy:
+  main:
     jobs:
       - node/test:
+          name: &unit_test unit_test
           test-results-for: jest
           executor:
             name: node/default
             resource_class: small
       - deploy:
-          requires: [ node/test ]
+          requires: [ *unit_test ]
           context: [ npm ]
           filters:
             tags:
