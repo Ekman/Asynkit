@@ -2,16 +2,14 @@
 
 [![Build Status](https://circleci.com/gh/Ekman/Asynkit.svg?style=svg)](https://app.circleci.com/pipelines/github/Ekman/Asynkit)
 
-Asynkit is an extension to `AsyncIterable`. Arrays have great support in JavaScript. You can do operations such as `map`, `filter` and `includes`. However, `AsyncIterables` have no operations at all and it is up to you to implement them. Enter Asynkit!
-
-Mastering the usage of async iterables (in any language) is a "shortcut" to reducing your memory footprint in a neat and tidy way.
+Asynkit extends the capabilities of AsyncIterable in JavaScript, providing utility methods such as map, filter, and includes that are natively available for arrays but absent for async iterables. Mastering the usage of async iterables (in any language) is a "shortcut" to reducing your memory footprint in a neat and tidy way.
 
 ## Installation
 
 Install with your favorite package manager:
 
 ```bash
-npm install --save asynkit
+npm install --save @nekm/asynkit
 ```
 
 ## Usage
@@ -19,7 +17,7 @@ npm install --save asynkit
 Use it with arrays:
 
 ```js
-import { Asynkit } from "asynkit";
+import { Asynkit } from "@nekm/asynkit";
 
 const array = [1, 2, 3, 4, 5];
 
@@ -30,9 +28,11 @@ const result = await Asynkit.fromArray(array)
 	.toArray();
 ```
 
-Or lets assume you have a function that fetches a large dataset:
+Or let's assume you have a function that fetches a large dataset:
 
 ```js
+import { Asynkit } from "@nekm/asynkit";
+
 const chunks = Asynkit.create(getLotsAndLotsOfData())
 	.filter(item => item.name === "foo")
 	.chunk(10);
