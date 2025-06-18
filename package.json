@@ -3,17 +3,17 @@
   "version": "1.0.0",
   "description": "Asynkit extends the capabilities of AsyncIterable in JavaScript, providing utility methods such as map, filter, and includes that are natively available for arrays but absent for async iterables.",
   "license": "MIT",
-	"source": "./src/index.ts",
-	"types": "./dist/index.d.ts",
-	"exports": {
-		"import": "./dist/index.esm.js",
-		"types": "./dist/index.d.ts",
-		"default": "./dist/index.js"
-	},
-	"main": "./dist/index.js",
-	"module": "./dist/index.esm.js",
-	"unpkg": "./dist/index.umd.js",
-	"scripts": {
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "import": "./dist/index.esm.js",
+    "types": "./dist/index.d.ts",
+    "default": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.esm.js",
+  "unpkg": "./dist/index.umd.js",
+  "scripts": {
     "build": "microbundle --format cjs,esm,umd",
     "test": "jest",
     "example": "node example/example.js"
@@ -35,9 +35,9 @@
       "url": "https://www.niklasekman.solutions"
     }
   ],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/Ekman/Asynkit.git"
-	},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ekman/Asynkit.git"
+  },
   "homepage": "https://github.com/Ekman/Asynkit#readme"
 }
