@@ -1,7 +1,8 @@
-import type {AsynkitInterface, Filter, Map} from "./interface";
+import type {AsynkitInterface, Filter, Map, Predicate} from "./interface";
 import {
 	asynkitAppend,
 	asynkitChunk,
+	asynkitEvery,
 	asynkitFilter,
 	asynkitFirst,
 	asynkitFirstOrDefault,
@@ -9,6 +10,7 @@ import {
 	asynkitIsEmpty,
 	asynkitMap,
 	asynkitPrepend,
+	asynkitSome,
 	asynkitToArray
 } from "./functions";
 
@@ -16,7 +18,8 @@ import {
  * Main implementation of an async collection
  */
 export class Asynkit<TInput> implements AsynkitInterface<TInput> {
-    constructor(private readonly it: AsyncIterable<TInput>) {}
+	constructor(private readonly it: AsyncIterable<TInput>) {
+	}
 
     /**
      * Create a new instance and return an interface
@@ -101,5 +104,19 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
 	 */
 	prepend(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput> {
 		return new Asynkit(asynkitPrepend(this.it, ...values));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	some(predicate: Predicate<TInput>): Promise<boolean> {
+		return asynkitSome(this.it, predicate);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	every(predicate: Predicate<TInput>): Promise<boolean> {
+		return asynkitEvery(this.it, predicate);
 	}
 }

@@ -42,6 +42,17 @@ for await (const items of chunks) {
 }
 ```
 
+If you do not want to use the class, there are functions as well:
+
+```js
+import { asynkitFromArray, asynkitMap, asynkitToArray } from "@nekm/asynkit";
+
+const it = asynkitFromArray([1, 2, 3, 4, 5]);
+const mapped = asynkitMap(it, x => x * 2);
+const array = await asynkitToArray(mapped);
+```
+
+
 ## Versioning
 
 This project complies with [Semantic Versioning](https://semver.org/).

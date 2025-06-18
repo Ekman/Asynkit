@@ -1,4 +1,5 @@
 import {Asynkit} from "./collection";
+import {asynkitEvery, asynkitFromArray, asynkitSome} from "./functions";
 
 describe("collections", () => {
     it("should be able to map", async () => {
@@ -29,5 +30,19 @@ describe("collections", () => {
 			.toArray();
 
 		expect(result).toEqual([1, 2, 3, 4, 23]);
+	})
+
+	it("should be able to test some", async () => {
+		const result = await Asynkit.fromArray([1, 2, 3, 4])
+			.some(x => x === 3);
+
+		expect(result).toBeTruthy();
+	})
+
+	it("should be able to test every", async () => {
+		const result = await Asynkit.fromArray([2, 2, 2, 2])
+			.every(x => x === 2);
+
+		expect(result).toBeTruthy();
 	})
 })

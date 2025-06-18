@@ -1,9 +1,9 @@
 import {
-	asynkitAppend,
+	asynkitAppend, asynkitEvery,
 	asynkitFilter, asynkitFirst,
 	asynkitFirstOrDefault,
 	asynkitFromArray,
-	asynkitMap, asynkitPrepend
+	asynkitMap, asynkitPrepend, asynkitSome
 } from "./functions";
 import {utilTestRun} from "./utils-test";
 import {AsynkitEmptyError} from "./errors";
@@ -66,5 +66,17 @@ describe("functions", () => {
 		);
 
 		expect(result).toEqual([1, 2, 3, 4, 23]);
+	})
+
+	it("should be able to test some", async () => {
+		const it = asynkitFromArray([1, 2, 3, 4]);
+
+		expect(await asynkitSome(it, x => x === 3)).toBeTruthy()
+	})
+
+	it("should be able to test every", async () => {
+		const it = asynkitFromArray([2, 2, 2, 2]);
+
+		expect(await asynkitEvery(it, x => x === 2)).toBeTruthy()
 	})
 })

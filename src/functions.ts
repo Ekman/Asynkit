@@ -1,4 +1,4 @@
-import {Filter, Map} from "./interface";
+import {Filter, Map, Predicate} from "./interface";
 import {AsynkitEmptyError} from "./errors";
 
 /**
@@ -135,4 +135,34 @@ export async function* asynkitPrepend<TInput>(it: AsyncIterable<TInput>, ...valu
 	for (const value of values) {
 		yield value;
 	}
+}
+
+/**
+ * Check if at least one value fulfills the predicate
+ * @param it
+ * @param predicate
+ */
+export async function asynkitSome<TInput>(it: AsyncIterable<TInput>, predicate: Predicate<TInput>): Promise<boolean> {
+	for await (const item of it) {
+		if (await predicate(item)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * Check if all values fulfills the predicate
+ * @param it
+ * @param predicate
+ */
+export async function asynkitEvery<TInput>(it: AsyncIterable<TInput>, predicate: Predicate<TInput>): Promise<boolean> {
+	for await (const item of it) {
+		if (!await predicate(item)) {
+			return false;
+		}
+	}
+
+	return true;
 }

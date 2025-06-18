@@ -1,6 +1,7 @@
 type PromiseOrValue<T> = Promise<T> | T;
+export type Predicate<TInput> = (value: TInput) => PromiseOrValue<boolean>;
 export type Map<TInput, TReturn> = (value: TInput) => PromiseOrValue<TReturn>;
-export type Filter<TInput> = (value: TInput) => PromiseOrValue<boolean>;
+export type Filter<TInput> = Predicate<TInput>;
 
 /**
  * Acts as an async iterable and adds chainable operations
@@ -57,4 +58,16 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
 	 * @param values
 	 */
 		prepend(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput>;
+
+	/**
+	 * Check if at least one value fulfills the predicate
+	 * @param predicate
+	 */
+		some(predicate: Predicate<TInput>): Promise<boolean>;
+
+	/**
+	 * Check if all values fulfills the predicate
+	 * @param predicate
+	 */
+		every(predicate: Predicate<TInput>): Promise<boolean>;
 }
