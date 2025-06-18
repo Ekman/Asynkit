@@ -2,7 +2,7 @@
 
 [![Build Status](https://circleci.com/gh/Ekman/Asynkit.svg?style=svg)](https://app.circleci.com/pipelines/github/Ekman/Asynkit)
 
-Asynkit extends the capabilities of AsyncIterable in JavaScript, providing utility methods such as map, filter, and includes that are natively available for arrays but absent for async iterables. Mastering the usage of async iterables (in any language) is a "shortcut" to reducing your memory footprint in a neat and tidy way.
+Asynkit extends the capabilities of `AsyncIterable` in JavaScript or TypeScript, providing utility methods such as map and filter that are natively available for arrays but not for `AsyncaIterable`. Mastering the usage of `AsyncIterable` (in any language) is a "shortcut" to reducing your memory footprint in a neat and tidy way.
 
 ## Installation
 

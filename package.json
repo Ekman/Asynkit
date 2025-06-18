@@ -37,5 +37,9 @@
       "name": "Niklas Ekman",
       "url": "https://www.niklasekman.solutions"
     }
-  ]
+  ],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Ekman/Asynkit.git"
+	}
 }
