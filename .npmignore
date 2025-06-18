@@ -1,8 +1,0 @@
-.idea
-tsconfig.json
-jest.config.ts
-.editorconfig
-example/
-.circleci
-junit.xml
-src/*test.ts
