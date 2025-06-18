@@ -37,7 +37,7 @@ workflows:
           executor:
             name: node/default
             resource_class: small
-          filters:
+          filters: &deploy_filters
             tags:
               only: /^\d+\.\d+\.\d+$/
             branches:
@@ -45,4 +45,5 @@ workflows:
       - deploy:
           requires: [ *unit_test ]
           context: [ npm ]
+          filters: *deploy_filters
 
