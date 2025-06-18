@@ -4,7 +4,7 @@
   "description": "Asynkit extends the capabilities of AsyncIterable in JavaScript, providing utility methods such as map, filter, and includes that are natively available for arrays but absent for async iterables.",
   "license": "MIT",
 	"type": "module",
-	"source": "src/index.js",
+	"source": "src/index.ts",
 	"types": "dist/index.d.ts",
 	"exports": {
 		"require": "./dist/index.cjs",
