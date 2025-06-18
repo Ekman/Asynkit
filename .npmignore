@@ -5,3 +5,4 @@ jest.config.ts
 example/
 .circleci
 junit.xml
+src/*test.ts
