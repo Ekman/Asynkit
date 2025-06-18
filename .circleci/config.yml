@@ -29,6 +29,9 @@ workflows:
           executor:
             name: node/default
             resource_class: small
+          filters:
+            branches:
+              ignore: master
   deploy:
     jobs:
       - node/test:
