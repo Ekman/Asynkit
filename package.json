@@ -2,12 +2,19 @@
   "name": "@nekm/asynkit",
   "version": "1.0.0",
   "description": "Asynkit extends the capabilities of AsyncIterable in JavaScript, providing utility methods such as map, filter, and includes that are natively available for arrays but absent for async iterables.",
-	"license": "MIT",
-  "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "build": "tsc",
+  "license": "MIT",
+	"type": "module",
+	"source": "src/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		"require": "./dist/index.cjs",
+		"default": "./dist/index.modern.js"
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.esm.js",
+	"unpkg": "./dist/index.umd.js",
+	"scripts": {
+    "build": "microbundle",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "example": "node example/example.js"
   },
@@ -19,6 +26,7 @@
     "@types/jest": "^30.0.0",
     "jest": "^30.0.0",
     "jest-junit": "^16.0.0",
+    "microbundle": "^0.15.1",
     "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3"
