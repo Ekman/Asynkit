@@ -15,8 +15,7 @@
   "unpkg": "./dist/index.umd.js",
   "scripts": {
     "build": "microbundle --format cjs,esm,umd",
-    "test": "jest",
-    "example": "node example/example.js"
+    "test": "jest"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
