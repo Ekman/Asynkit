@@ -6,12 +6,11 @@
 	"source": "./src/index.ts",
 	"types": "./dist/index.d.ts",
 	"exports": {
-		"require": "./dist/index.cjs",
 		"import": "./dist/index.esm.js",
 		"types": "./dist/index.d.ts",
-		"default": "./dist/index.cjs"
+		"default": "./dist/index.js"
 	},
-	"main": "./dist/index.cjs",
+	"main": "./dist/index.js",
 	"module": "./dist/index.esm.js",
 	"unpkg": "./dist/index.umd.js",
 	"scripts": {
