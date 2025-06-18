@@ -1,5 +1,5 @@
-import {Filter, Map} from "./interface.js";
-import {AsynkitEmptyError} from "./errors.js";
+import {Filter, Map} from "./interface";
+import {AsynkitEmptyError} from "./errors";
 
 /**
  * Convert an array into an async iterable

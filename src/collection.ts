@@ -1,4 +1,4 @@
-import type {AsynkitInterface, Filter, Map} from "./interface.js";
+import type {AsynkitInterface, Filter, Map} from "./interface";
 import {
 	asynkitAppend,
 	asynkitChunk,
@@ -10,7 +10,7 @@ import {
 	asynkitMap,
 	asynkitPrepend,
 	asynkitToArray
-} from "./functions.js";
+} from "./functions";
 
 /**
  * Main implementation of an async collection

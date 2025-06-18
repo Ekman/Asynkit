@@ -1,4 +1,4 @@
-import {Asynkit} from "./collection.js";
+import {Asynkit} from "./collection";
 
 describe("collections", () => {
     it("should be able to map", async () => {

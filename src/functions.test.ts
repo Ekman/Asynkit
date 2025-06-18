@@ -4,9 +4,9 @@ import {
 	asynkitFirstOrDefault,
 	asynkitFromArray,
 	asynkitMap, asynkitPrepend
-} from "./functions.js";
-import {utilTestRun} from "./utils-test.js";
-import {AsynkitEmptyError} from "./errors.js";
+} from "./functions";
+import {utilTestRun} from "./utils-test";
+import {AsynkitEmptyError} from "./errors";
 
 describe("functions", () => {
     it("should be able to map", async () => {
