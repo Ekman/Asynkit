@@ -1,18 +1,27 @@
-import type {Accumulator, AsynkitInterface, Filter, KeySelector, Map, Predicate} from "./interface";
+import type {
+  Accumulator,
+  AsynkitInterface,
+  Filter,
+  KeySelector,
+  Map,
+  Predicate,
+} from "./interface";
 import {
-	asynkitAppend,
-	asynkitChunk,
-	asynkitEvery,
-	asynkitFilter,
-	asynkitFirst,
-	asynkitFirstOrDefault,
-	asynkitFromArray,
-	asynkitFromIterable,
-	asynkitIsEmpty,
-	asynkitMap,
-	asynkitPrepend, asynkitReduce,
-	asynkitSome,
-	asynkitToArray, asynkitToObject,
+  asynkitAppend,
+  asynkitChunk,
+  asynkitEvery,
+  asynkitFilter,
+  asynkitFirst,
+  asynkitFirstOrDefault,
+  asynkitFromArray,
+  asynkitFromIterable,
+  asynkitIsEmpty,
+  asynkitMap,
+  asynkitPrepend,
+  asynkitReduce,
+  asynkitSome,
+  asynkitToArray,
+  asynkitToObject,
 } from "./functions";
 
 /**
@@ -138,17 +147,22 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
     return asynkitEvery(this.it, predicate);
   }
 
-	/**
-	 * @inheritDoc
-	 */
-	reduce<TReturn>(acc: Accumulator<TInput, TReturn>, start: TReturn): Promise<TReturn> {
-		return asynkitReduce(this.it, acc, start);
-	}
+  /**
+   * @inheritDoc
+   */
+  reduce<TReturn>(
+    acc: Accumulator<TInput, TReturn>,
+    start: TReturn,
+  ): Promise<TReturn> {
+    return asynkitReduce(this.it, acc, start);
+  }
 
-	/**
-	 * @inheritDoc
-	 */
-	toObject<TKey extends keyof TInput>(keySelector: KeySelector<TInput>): Promise<Record<TKey, TInput[TKey]>> {
-		return asynkitToObject(this.it, keySelector);
-	}
+  /**
+   * @inheritDoc
+   */
+  toObject<TKey extends keyof TInput>(
+    keySelector: KeySelector<TInput>,
+  ): Promise<Record<TKey, TInput>> {
+    return asynkitToObject(this.it, keySelector);
+  }
 }

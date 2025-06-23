@@ -1,5 +1,6 @@
-import {Accumulator, Filter, KeySelector, Map, Predicate} from "./interface";
-import {AsynkitBadKeyError, AsynkitEmptyError} from "./errors";
+import { Accumulator, Filter, KeySelector, Map, Predicate } from "./interface";
+import { AsynkitEmptyError } from "./errors";
+import { utilAssertObjectPropertyType } from "./utils";
 
 /**
  * Convert an array into an async iterable
@@ -234,7 +235,7 @@ export async function asynkitReduce<TInput, TReturn>(
  * @param it
  * @param keySelector
  */
-export async function asynkitToObject<TInput, TKey extends keyof TInput>(
+export function asynkitToObject<TInput, TKey extends keyof TInput>(
   it: AsyncIterable<TInput>,
   keySelector: KeySelector<TInput>,
 ): Promise<Record<TKey, TInput>> {
@@ -242,12 +243,8 @@ export async function asynkitToObject<TInput, TKey extends keyof TInput>(
     it,
     (obj, item) => {
       const key = keySelector(item);
-
-			if (typeof key === "string" || typeof key === "number" || typeof key === "symbol") {
-				return { ...obj, [key]: item };
-			}
-
-			throw new AsynkitBadKeyError("A key of an object must be a string, number or symbol.");
+      utilAssertObjectPropertyType(key);
+      return { ...obj, [key]: item };
     },
     {} as Record<TKey, TInput>,
   );
@@ -257,6 +254,6 @@ export async function asynkitToObject<TInput, TKey extends keyof TInput>(
  * Summarize numbers from an async iterable
  * @param it
  */
-export async function asynkitSum(it: AsyncIterable<number>): Promise<number> {
-	return asynkitReduce(it, (sum, num) => sum + num, 0);
+export function asynkitSum(it: AsyncIterable<number>): Promise<number> {
+  return asynkitReduce(it, (sum, num) => sum + num, 0);
 }

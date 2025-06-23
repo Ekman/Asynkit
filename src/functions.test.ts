@@ -1,15 +1,18 @@
 import {
-	asynkitAppend,
-	asynkitEvery,
-	asynkitFilter,
-	asynkitFirst,
-	asynkitFirstOrDefault,
-	asynkitFromArray,
-	asynkitFromIterable,
-	asynkitMap,
-	asynkitPrepend, asynkitReduce,
-	asynkitSome, asynkitSum,
-	asynkitToArray, asynkitToObject,
+  asynkitAppend,
+  asynkitEvery,
+  asynkitFilter,
+  asynkitFirst,
+  asynkitFirstOrDefault,
+  asynkitFromArray,
+  asynkitFromIterable,
+  asynkitMap,
+  asynkitPrepend,
+  asynkitReduce,
+  asynkitSome,
+  asynkitSum,
+  asynkitToArray,
+  asynkitToObject,
 } from "./functions";
 import { utilTestRun } from "./utils-test";
 import { AsynkitEmptyError } from "./errors";
@@ -124,43 +127,43 @@ describe("functions", () => {
     expect(await asynkitEvery(it, (x) => x === 2)).toBeTruthy();
   });
 
-	it("should be able to reduce", async () => {
-		const it = asynkitFromArray([2, 2, 2, 3]);
-		const sum = await asynkitReduce(it, (acc, x) => acc + x, 0);
+  it("should be able to reduce", async () => {
+    const it = asynkitFromArray([2, 2, 2, 3]);
+    const sum = await asynkitReduce(it, (acc, x) => acc + x, 0);
 
-		expect(sum).toEqual(9);
-	});
+    expect(sum).toEqual(9);
+  });
 
-	it("should be able to reduce", async () => {
-		const it = asynkitFromArray([
-			{
-				foo: "yoo",
-				bar: "baz",
-			},
-			{
-				foo: "hello",
-				bar: "world",
-			},
-		]);
+  it("should be able to reduce", async () => {
+    const it = asynkitFromArray([
+      {
+        foo: "yoo",
+        bar: "baz",
+      },
+      {
+        foo: "hello",
+        bar: "world",
+      },
+    ]);
 
-		const obj = await asynkitToObject(it, item => item.bar);
+    const obj = await asynkitToObject(it, (item) => item.bar);
 
-		expect(obj).toEqual({
-			baz: {
-				foo: "yoo",
-				bar: "baz",
-			},
-			world: {
-				foo: "hello",
-				bar: "world",
-			},
-		});
-	});
+    expect(obj).toEqual({
+      baz: {
+        foo: "yoo",
+        bar: "baz",
+      },
+      world: {
+        foo: "hello",
+        bar: "world",
+      },
+    });
+  });
 
-	it("should be able to summarize", async () => {
-		const it = asynkitFromArray([2, 2, 3, 3]);
-		const sum = await asynkitSum(it);
+  it("should be able to summarize", async () => {
+    const it = asynkitFromArray([2, 2, 3, 3]);
+    const sum = await asynkitSum(it);
 
-		expect(sum).toEqual(10);
-	});
+    expect(sum).toEqual(10);
+  });
 });

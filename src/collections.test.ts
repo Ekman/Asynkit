@@ -1,6 +1,5 @@
 import { Asynkit } from "./collection";
 import { AsynkitEmptyError } from "./errors";
-import {asynkitFromArray, asynkitReduce, asynkitToObject} from "./functions";
 
 describe("collections", () => {
   it("should be able to create from array", async () => {
@@ -116,34 +115,34 @@ describe("collections", () => {
     expect(result).toBeTruthy();
   });
 
-	it("should be able to reduce", async () => {
-		const sum = await Asynkit.fromArray([2, 2, 2, 3])
-			.reduce((acc, x) => acc + x, 0);
+  it("should be able to reduce", async () => {
+    const sum = await Asynkit.fromArray([2, 2, 2, 3])
+      .reduce((acc, x) => acc + x, 0);
 
-		expect(sum).toEqual(9);
-	});
+    expect(sum).toEqual(9);
+  });
 
-	it("should be able to reduce", async () => {
-		const obj = await Asynkit.fromArray([
-			{
-				foo: "yoo",
-				bar: "baz",
-			},
-			{
-				foo: "hello",
-				bar: "world",
-			},
-		]).toObject(item => item.bar);
+  it("should be able to reduce", async () => {
+    const obj = await Asynkit.fromArray([
+      {
+        foo: "yoo",
+        bar: "baz",
+      },
+      {
+        foo: "hello",
+        bar: "world",
+      },
+    ]).toObject((item) => item.bar);
 
-		expect(obj).toEqual({
-			baz: {
-				foo: "yoo",
-				bar: "baz",
-			},
-			world: {
-				foo: "hello",
-				bar: "world",
-			},
-		});
-	});
+    expect(obj).toEqual({
+      baz: {
+        foo: "yoo",
+        bar: "baz",
+      },
+      world: {
+        foo: "hello",
+        bar: "world",
+      },
+    });
+  });
 });
