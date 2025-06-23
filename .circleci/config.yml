@@ -46,7 +46,6 @@ workflows:
             branches:
               ignore: /.*/
       - deploy:
-          requires: [ *unit_test ]
-          context: [ npm ]
+          requires: [*unit_test]
+          context: [npm]
           filters: *deploy_filters
-

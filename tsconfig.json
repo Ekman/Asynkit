@@ -2,10 +2,10 @@
   "extends": "@tsconfig/node22",
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
-		"isolatedModules": true,
+    "isolatedModules": true,
 
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": "src"
   },
   "include": ["src"],
   "exclude": ["src/*test*", "node_modules"]

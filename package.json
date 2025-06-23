@@ -39,13 +39,13 @@
     "url": "git+https://github.com/Ekman/Asynkit.git"
   },
   "homepage": "https://github.com/Ekman/Asynkit#readme",
-	"files": ["dist", "src"],
-	"author": {
-		"name": "Niklas Ekman",
-		"email": "niklas@niklasekman.solutions"
-	},
-	"keywords": [
-		"AsyncIterable"
-	],
-	"sideEffects": false
+  "files": ["dist", "src"],
+  "author": {
+    "name": "Niklas Ekman",
+    "email": "niklas@niklasekman.solutions"
+  },
+  "keywords": [
+    "AsyncIterable"
+  ],
+  "sideEffects": false
 }

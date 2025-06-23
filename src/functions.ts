@@ -1,14 +1,27 @@
-import {Filter, Map, Predicate} from "./interface";
-import {AsynkitEmptyError} from "./errors";
+import { Filter, Map, Predicate } from "./interface";
+import { AsynkitEmptyError } from "./errors";
 
 /**
  * Convert an array into an async iterable
  * @param array
+ * @alias asynkitFromIterable
  */
-export async function* asynkitFromArray<TInput>(array: ReadonlyArray<TInput>): AsyncIterable<TInput> {
-    for (const value of array) {
-        yield value;
-    }
+export function asynkitFromArray<TInput>(
+  array: ReadonlyArray<TInput>,
+): AsyncIterable<TInput> {
+  return asynkitFromIterable(array);
+}
+
+/**
+ * Convert an iterable into an async iterable
+ * @param it
+ */
+export async function* asynkitFromIterable<TInput>(
+  it: Iterable<TInput>,
+): AsyncIterable<TInput> {
+  for (const value of it) {
+    yield value;
+  }
 }
 
 /**
@@ -16,10 +29,13 @@ export async function* asynkitFromArray<TInput>(array: ReadonlyArray<TInput>): A
  * @param it
  * @param map
  */
-export async function* asynkitMap<TInput, TReturn>(it: AsyncIterable<TInput>, map: Map<TInput, TReturn>): AsyncIterable<TReturn> {
-    for await (const value of it) {
-        yield await map(value);
-    }
+export async function* asynkitMap<TInput, TReturn>(
+  it: AsyncIterable<TInput>,
+  map: Map<TInput, TReturn>,
+): AsyncIterable<TReturn> {
+  for await (const value of it) {
+    yield await map(value);
+  }
 }
 
 /**
@@ -27,26 +43,31 @@ export async function* asynkitMap<TInput, TReturn>(it: AsyncIterable<TInput>, ma
  * @param it
  * @param filter
  */
-export async function* asynkitFilter<TInput>(it: AsyncIterable<TInput>, filter: Filter<TInput>): AsyncIterable<TInput> {
-    for await (const value of it) {
-        if (await filter(value)) {
-            yield value;
-        }
+export async function* asynkitFilter<TInput>(
+  it: AsyncIterable<TInput>,
+  filter: Filter<TInput>,
+): AsyncIterable<TInput> {
+  for await (const value of it) {
+    if (await filter(value)) {
+      yield value;
     }
+  }
 }
 
 /**
  * Convert to an array
  * @param it
  */
-export async function asynkitToArray<TInput>(it: AsyncIterable<TInput>): Promise<TInput[]> {
-    const array = [];
+export async function asynkitToArray<TInput>(
+  it: AsyncIterable<TInput>,
+): Promise<TInput[]> {
+  const array = [];
 
-    for await (const value of it) {
-        array.push(value);
-    }
+  for await (const value of it) {
+    array.push(value);
+  }
 
-    return array;
+  return array;
 }
 
 /**
@@ -54,12 +75,15 @@ export async function asynkitToArray<TInput>(it: AsyncIterable<TInput>): Promise
  * @param it
  * @param def
  */
-export async function asynkitFirstOrDefault<TInput>(it: AsyncIterable<TInput>, def: TInput): Promise<TInput> {
-    for await (const value of it) {
-        return value;
-    }
+export async function asynkitFirstOrDefault<TInput>(
+  it: AsyncIterable<TInput>,
+  def: TInput,
+): Promise<TInput> {
+  for await (const value of it) {
+    return value;
+  }
 
-    return def;
+  return def;
 }
 
 /**
@@ -67,22 +91,26 @@ export async function asynkitFirstOrDefault<TInput>(it: AsyncIterable<TInput>, d
  * @param it
  * @throws {AsynkitEmptyError}
  */
-export async function asynkitFirst<TInput>(it: AsyncIterable<TInput>): Promise<TInput> {
-    const first = await asynkitFirstOrDefault(it, undefined);
+export async function asynkitFirst<TInput>(
+  it: AsyncIterable<TInput>,
+): Promise<TInput> {
+  const first = await asynkitFirstOrDefault(it, undefined);
 
-    if (first) {
-        return first;
-    }
+  if (first) {
+    return first;
+  }
 
-    throw new AsynkitEmptyError("Async iterable is empty");
+  throw new AsynkitEmptyError("Async iterable is empty");
 }
 
 /**
  * Check if empty or not
  * @param it
  */
-export async function asynkitIsEmpty<TInput>(it: AsyncIterable<TInput>): Promise<boolean> {
-    return Boolean(await asynkitFirstOrDefault(it, undefined));
+export async function asynkitIsEmpty<TInput>(
+  it: AsyncIterable<TInput>,
+): Promise<boolean> {
+  return Boolean(await asynkitFirstOrDefault(it, undefined));
 }
 
 /**
@@ -90,21 +118,24 @@ export async function asynkitIsEmpty<TInput>(it: AsyncIterable<TInput>): Promise
  * @param it
  * @param chunkSize
  */
-export async function* asynkitChunk<TInput>(it: AsyncIterable<TInput>, chunkSize: number): AsyncIterable<TInput[]> {
-    let chunk: TInput[] = []
+export async function* asynkitChunk<TInput>(
+  it: AsyncIterable<TInput>,
+  chunkSize: number,
+): AsyncIterable<TInput[]> {
+  let chunk: TInput[] = [];
 
-    for await (const item of it) {
-        chunk.push(item);
+  for await (const item of it) {
+    chunk.push(item);
 
-        if (chunk.length >= chunkSize) {
-            yield chunk;
-            chunk = [];
-        }
+    if (chunk.length >= chunkSize) {
+      yield chunk;
+      chunk = [];
     }
+  }
 
-    if (chunk.length > 0) {
-        yield chunk;
-    }
+  if (chunk.length > 0) {
+    yield chunk;
+  }
 }
 
 /**
@@ -112,14 +143,17 @@ export async function* asynkitChunk<TInput>(it: AsyncIterable<TInput>, chunkSize
  * @param it
  * @param values
  */
-export async function* asynkitAppend<TInput>(it: AsyncIterable<TInput>, ...values: ReadonlyArray<TInput>): AsyncIterable<TInput> {
-	for (const value of values) {
-		yield value;
-	}
+export async function* asynkitAppend<TInput>(
+  it: AsyncIterable<TInput>,
+  ...values: ReadonlyArray<TInput>
+): AsyncIterable<TInput> {
+  for (const value of values) {
+    yield value;
+  }
 
-	for await (const item of it) {
-		yield item;
-	}
+  for await (const item of it) {
+    yield item;
+  }
 }
 
 /**
@@ -127,14 +161,17 @@ export async function* asynkitAppend<TInput>(it: AsyncIterable<TInput>, ...value
  * @param it
  * @param values
  */
-export async function* asynkitPrepend<TInput>(it: AsyncIterable<TInput>, ...values: ReadonlyArray<TInput>): AsyncIterable<TInput> {
-	for await (const item of it) {
-		yield item;
-	}
+export async function* asynkitPrepend<TInput>(
+  it: AsyncIterable<TInput>,
+  ...values: ReadonlyArray<TInput>
+): AsyncIterable<TInput> {
+  for await (const item of it) {
+    yield item;
+  }
 
-	for (const value of values) {
-		yield value;
-	}
+  for (const value of values) {
+    yield value;
+  }
 }
 
 /**
@@ -142,14 +179,17 @@ export async function* asynkitPrepend<TInput>(it: AsyncIterable<TInput>, ...valu
  * @param it
  * @param predicate
  */
-export async function asynkitSome<TInput>(it: AsyncIterable<TInput>, predicate: Predicate<TInput>): Promise<boolean> {
-	for await (const item of it) {
-		if (await predicate(item)) {
-			return true;
-		}
-	}
+export async function asynkitSome<TInput>(
+  it: AsyncIterable<TInput>,
+  predicate: Predicate<TInput>,
+): Promise<boolean> {
+  for await (const item of it) {
+    if (await predicate(item)) {
+      return true;
+    }
+  }
 
-	return false;
+  return false;
 }
 
 /**
@@ -157,12 +197,15 @@ export async function asynkitSome<TInput>(it: AsyncIterable<TInput>, predicate: 
  * @param it
  * @param predicate
  */
-export async function asynkitEvery<TInput>(it: AsyncIterable<TInput>, predicate: Predicate<TInput>): Promise<boolean> {
-	for await (const item of it) {
-		if (!await predicate(item)) {
-			return false;
-		}
-	}
+export async function asynkitEvery<TInput>(
+  it: AsyncIterable<TInput>,
+  predicate: Predicate<TInput>,
+): Promise<boolean> {
+  for await (const item of it) {
+    if (!await predicate(item)) {
+      return false;
+    }
+  }
 
-	return true;
+  return true;
 }
