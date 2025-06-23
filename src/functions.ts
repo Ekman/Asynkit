@@ -1,4 +1,4 @@
-import { Filter, Map, Predicate } from "./interface";
+import { Filter, Map, Predicate, PromiseOrValue } from "./interface";
 import { AsynkitEmptyError } from "./errors";
 
 /**
@@ -43,12 +43,13 @@ export async function* asynkitMap<TInput, TReturn>(
  * @param it
  * @param filter
  */
-export async function* asynkitFilter<TInput>(
+export async function* asynkitFilter<TInput, TReturn extends TInput = TInput>(
   it: AsyncIterable<TInput>,
   filter: Filter<TInput>,
-): AsyncIterable<TInput> {
+): AsyncIterable<TReturn> {
   for await (const value of it) {
     if (await filter(value)) {
+      // @ts-expect-error It works, so ignore this.
       yield value;
     }
   }

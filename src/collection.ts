@@ -69,8 +69,10 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
   /**
    * @inheritDoc
    */
-  filter(filter: Filter<TInput>): AsynkitInterface<TInput> {
-    return new Asynkit(asynkitFilter(this.it, filter));
+  filter<TReturn extends TInput = TInput>(
+    filter: Filter<TInput, TReturn>,
+  ): AsynkitInterface<TReturn> {
+    return new Asynkit(asynkitFilter<TInput, TReturn>(this.it, filter));
   }
 
   /**

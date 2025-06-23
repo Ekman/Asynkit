@@ -1,7 +1,9 @@
-type PromiseOrValue<T> = Promise<T> | T;
+export type PromiseOrValue<T> = Promise<T> | T;
 export type Predicate<TInput> = (value: TInput) => PromiseOrValue<boolean>;
 export type Map<TInput, TReturn> = (value: TInput) => PromiseOrValue<TReturn>;
-export type Filter<TInput> = Predicate<TInput>;
+export type Filter<TInput, TReturn extends TInput = TInput> =
+  | ((item: TInput) => item is TReturn)
+  | Predicate<TInput>;
 
 /**
  * Acts as an async iterable and adds chainable operations
@@ -17,7 +19,9 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
    * Only include values that pass the filter
    * @param filter
    */
-  filter(filter: Filter<TInput>): AsynkitInterface<TInput>;
+  filter<TReturn extends TInput = TInput>(
+    filter: Filter<TInput, TReturn>,
+  ): AsynkitInterface<TReturn>;
 
   /**
    * Convert to an array
@@ -32,7 +36,7 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
 
   /**
    * Get the first value or throw an exception
-   * @throws {AsyncCollectionEmptyError}
+   * @throws {AsynkitEmptyError}
    */
   first(): Promise<TInput>;
 

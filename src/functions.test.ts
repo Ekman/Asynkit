@@ -45,6 +45,22 @@ describe("functions", () => {
     expect(result).toEqual([2, 4, 6, 8, 10]);
   });
 
+  it("should be able to filter undefined", async () => {
+    const result = await utilTestRun(
+      [2, undefined, 5, 6, undefined, 9, 10],
+      (it) => asynkitFilter(it, (x) => x !== undefined),
+    );
+    expect(result).toEqual([2, 5, 6, 9, 10]);
+  });
+
+  it("should be able to filter using Promise", async () => {
+    const result = await utilTestRun(
+      [2, undefined, 5, 6, undefined, 9, 10],
+      (it) => asynkitFilter(it, (x) => Promise.resolve(x === 2)),
+    );
+    expect(result).toEqual([2]);
+  });
+
   it("should be able to get the first or default", async () => {
     const result = await asynkitFirstOrDefault(
       asynkitFromArray([2, 4, 5, 6, 8, 9, 10]),

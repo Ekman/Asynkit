@@ -1,4 +1,6 @@
 import { Asynkit } from "./collection";
+import { utilTestRun } from "./utils-test";
+import { asynkitFilter } from "./functions";
 
 describe("collections", () => {
   it("should be able to create from array", async () => {
@@ -25,6 +27,36 @@ describe("collections", () => {
       .filter((x) => x % 2 === 0)
       .toArray();
     expect(result).toEqual([2, 4, 6, 8, 10]);
+  });
+
+  it("should be able to filter undefined", async () => {
+    const result = await Asynkit.fromArray([
+      2,
+      undefined,
+      5,
+      6,
+      undefined,
+      9,
+      10,
+    ])
+      .filter((x) => x !== undefined)
+      .toArray();
+    expect(result).toEqual([2, 5, 6, 9, 10]);
+  });
+
+  it("should be able to filter using Promise", async () => {
+    const result = await Asynkit.fromArray([
+      2,
+      undefined,
+      5,
+      6,
+      undefined,
+      9,
+      10,
+    ])
+      .filter((x) => Promise.resolve(x === 2))
+      .toArray();
+    expect(result).toEqual([2]);
   });
 
   it("should be able to append a value", async () => {
