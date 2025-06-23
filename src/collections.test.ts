@@ -1,11 +1,4 @@
 import { Asynkit } from "./collection";
-import { utilTestRun } from "./utils-test";
-import {
-  asynkitFilter,
-  asynkitFirst,
-  asynkitFirstOrDefault,
-  asynkitFromArray,
-} from "./functions";
 import { AsynkitEmptyError } from "./errors";
 
 describe("collections", () => {
