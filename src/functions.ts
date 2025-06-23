@@ -1,5 +1,5 @@
-import { Filter, Map, Predicate } from "./interface";
-import { AsynkitEmptyError } from "./errors";
+import {Accumulator, Filter, KeySelector, Map, Predicate} from "./interface";
+import {AsynkitBadKeyError, AsynkitEmptyError} from "./errors";
 
 /**
  * Convert an array into an async iterable
@@ -209,4 +209,54 @@ export async function asynkitEvery<TInput>(
   }
 
   return true;
+}
+
+/**
+ * Reduce an async iterable to one value
+ * @param it
+ * @param aggregator
+ * @param start
+ */
+export async function asynkitReduce<TInput, TReturn>(
+  it: AsyncIterable<TInput>,
+  aggregator: Accumulator<TInput, TReturn>,
+  start: TReturn,
+): Promise<TReturn> {
+  for await (const item of it) {
+    start = await aggregator(start, item);
+  }
+
+  return start;
+}
+
+/**
+ * Convert an async iterable to an object
+ * @param it
+ * @param keySelector
+ */
+export async function asynkitToObject<TInput, TKey extends keyof TInput>(
+  it: AsyncIterable<TInput>,
+  keySelector: KeySelector<TInput>,
+): Promise<Record<TKey, TInput>> {
+  return asynkitReduce(
+    it,
+    (obj, item) => {
+      const key = keySelector(item);
+
+			if (typeof key === "string" || typeof key === "number" || typeof key === "symbol") {
+				return { ...obj, [key]: item };
+			}
+
+			throw new AsynkitBadKeyError("A key of an object must be a string, number or symbol.");
+    },
+    {} as Record<TKey, TInput>,
+  );
+}
+
+/**
+ * Summarize numbers from an async iterable
+ * @param it
+ */
+export async function asynkitSum(it: AsyncIterable<number>): Promise<number> {
+	return asynkitReduce(it, (sum, num) => sum + num, 0);
 }

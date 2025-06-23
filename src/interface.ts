@@ -4,6 +4,8 @@ export type Map<TInput, TReturn> = (value: TInput) => PromiseOrValue<TReturn>;
 export type Filter<TInput, TReturn extends TInput = TInput> =
   | ((item: TInput) => item is TReturn)
   | Predicate<TInput>;
+export type Accumulator<TInput, TReturn> = (acc: TReturn, item: TInput) => PromiseOrValue<TReturn>;
+export type KeySelector<TInput> = (item: TInput) => TInput[keyof TInput];
 
 /**
  * Acts as an async iterable and adds chainable operations
@@ -74,4 +76,17 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
    * @param predicate
    */
   every(predicate: Predicate<TInput>): Promise<boolean>;
+
+	/**
+	 * Reduce the async iterable to one value
+	 * @param acc
+	 * @param start
+	 */
+	reduce<TReturn>(acc: Accumulator<TInput, TReturn>, start: TReturn): Promise<TReturn>;
+
+	/**
+	 * Convert the async iterable to an object
+	 * @param keySelector
+	 */
+	toObject<TKey extends keyof TInput>(keySelector: KeySelector<TInput>): Promise<Record<TKey, TInput>>;
 }
