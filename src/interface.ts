@@ -32,7 +32,7 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
    * Get the first value or return a default value
    * @param def
    */
-  firstOrDefault(def: TInput): Promise<TInput>;
+  firstOrDefault(def?: TInput): Promise<TInput | undefined>;
 
   /**
    * Get the first value or throw an exception

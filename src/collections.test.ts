@@ -1,6 +1,12 @@
 import { Asynkit } from "./collection";
 import { utilTestRun } from "./utils-test";
-import { asynkitFilter } from "./functions";
+import {
+  asynkitFilter,
+  asynkitFirst,
+  asynkitFirstOrDefault,
+  asynkitFromArray,
+} from "./functions";
+import { AsynkitEmptyError } from "./errors";
 
 describe("collections", () => {
   it("should be able to create from array", async () => {
@@ -27,6 +33,33 @@ describe("collections", () => {
       .filter((x) => x % 2 === 0)
       .toArray();
     expect(result).toEqual([2, 4, 6, 8, 10]);
+  });
+
+  it("should be able to get the first or default", async () => {
+    const result = await Asynkit.fromArray([2, 4, 5, 6, 8, 9, 10])
+      .firstOrDefault();
+    expect(result).toEqual(2);
+  });
+
+  it("should be able to get the first or default, empty", async () => {
+    const result = await Asynkit.fromArray([])
+      .firstOrDefault();
+    expect(result).toBeUndefined();
+  });
+
+  it("should be able to get the first", async () => {
+    const result = await Asynkit.fromArray([4, 5, 6, 8, 9, 10])
+      .first();
+    expect(result).toEqual(4);
+  });
+
+  it("throws if it gets first first in an empty iterable", () => {
+    const result = () => {
+      return Asynkit.fromArray([])
+        .first();
+    };
+
+    return expect(result).rejects.toThrow(AsynkitEmptyError);
   });
 
   it("should be able to filter undefined", async () => {

@@ -85,7 +85,7 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
   /**
    * @inheritDoc
    */
-  firstOrDefault(def: TInput): Promise<TInput> {
+  firstOrDefault(def?: TInput): Promise<TInput | undefined> {
     return asynkitFirstOrDefault(this.it, def);
   }
 

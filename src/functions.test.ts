@@ -69,6 +69,14 @@ describe("functions", () => {
     expect(result).toEqual(2);
   });
 
+  it("should be able to get the first or default, empty", async () => {
+    const result = await asynkitFirstOrDefault(
+      asynkitFromArray([]),
+      undefined,
+    );
+    expect(result).toBeUndefined();
+  });
+
   it("should be able to get the first", async () => {
     const result = await asynkitFirst(
       asynkitFromArray([4, 5, 6, 8, 9, 10]),
@@ -76,14 +84,14 @@ describe("functions", () => {
     expect(result).toEqual(4);
   });
 
-  it("throws if it gets first first in an empty iterable", async () => {
+  it("throws if it gets first first in an empty iterable", () => {
     const result = () => {
       return asynkitFirst(
         asynkitFromArray([]),
       );
     };
 
-    await expect(result).rejects.toThrow(AsynkitEmptyError);
+    return expect(result).rejects.toThrow(AsynkitEmptyError);
   });
 
   it("should be able to append a value", async () => {

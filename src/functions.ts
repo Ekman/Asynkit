@@ -1,4 +1,4 @@
-import { Filter, Map, Predicate, PromiseOrValue } from "./interface";
+import { Filter, Map, Predicate } from "./interface";
 import { AsynkitEmptyError } from "./errors";
 
 /**
@@ -78,8 +78,8 @@ export async function asynkitToArray<TInput>(
  */
 export async function asynkitFirstOrDefault<TInput>(
   it: AsyncIterable<TInput>,
-  def: TInput,
-): Promise<TInput> {
+  def?: TInput,
+): Promise<TInput | undefined> {
   for await (const value of it) {
     return value;
   }
