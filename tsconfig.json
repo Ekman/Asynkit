@@ -1,11 +1,11 @@
 {
-  "extends": "@tsconfig/node22",
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-
-    "outDir": "dist",
-    "rootDir": "src"
+    "strict": true,
+    "target": "es2024",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src"],
   "exclude": ["src/*test*", "node_modules"]
