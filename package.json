@@ -18,10 +18,10 @@
     "test": "vitest run"
   },
   "devDependencies": {
-    "@tsconfig/node22": "^22.0.2",
+    "@tsconfig/node22": "^22.0.5",
     "microbundle": "^0.15.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3",
+    "typescript": "^6.0.3",
     "vitest": "^4.1.8"
   },
   "maintainers": [
