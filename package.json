@@ -15,17 +15,14 @@
   "unpkg": "./dist/index.umd.js",
   "scripts": {
     "build": "microbundle --format cjs,esm,umd",
-    "test": "jest"
+    "test": "vitest run"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
-    "@types/jest": "^30.0.0",
-    "jest": "^30.0.0",
-    "jest-junit": "^16.0.0",
     "microbundle": "^0.15.1",
-    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vitest": "^4.1.8"
   },
   "maintainers": [
     {
@@ -39,7 +36,10 @@
     "url": "git+https://github.com/Ekman/Asynkit.git"
   },
   "homepage": "https://github.com/Ekman/Asynkit#readme",
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "author": {
     "name": "Niklas Ekman",
     "email": "niklas@niklasekman.solutions"
