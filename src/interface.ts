@@ -97,4 +97,10 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
   toObject<TKey extends keyof TInput>(
     keySelector: KeySelector<TInput>,
   ): Promise<Record<TKey, TInput>>;
+
+  /**
+   * Concatenate with other async iterables
+   * @param iterables
+   */
+  concat(...iterables: ReadonlyArray<AsyncIterable<TInput>>): AsynkitInterface<TInput>;
 }

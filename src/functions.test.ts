@@ -1,5 +1,6 @@
 import {
   asynkitAppend,
+  asynkitConcat,
   asynkitEvery,
   asynkitFilter,
   asynkitFirst,
@@ -165,5 +166,43 @@ describe("functions", () => {
     const sum = await asynkitSum(it);
 
     expect(sum).toEqual(10);
+  });
+
+  test.each([
+    {
+      label: "two non-empty iterables",
+      inputs: [[1, 2], [3, 4]],
+      expected: [1, 2, 3, 4],
+    },
+    {
+      label: "three non-empty iterables",
+      inputs: [[1], [2], [3]],
+      expected: [1, 2, 3],
+    },
+    {
+      label: "one empty and one non-empty",
+      inputs: [[], [1, 2]],
+      expected: [1, 2],
+    },
+    {
+      label: "all empty",
+      inputs: [[], []],
+      expected: [],
+    },
+    {
+      label: "single iterable",
+      inputs: [[1, 2, 3]],
+      expected: [1, 2, 3],
+    },
+    {
+      label: "no iterables",
+      inputs: [],
+      expected: [],
+    },
+  ])("should concat $label", async ({ inputs, expected }) => {
+    const result = await asynkitToArray(
+      asynkitConcat(...inputs.map(asynkitFromArray)),
+    );
+    expect(result).toEqual(expected);
   });
 });

@@ -145,4 +145,42 @@ describe("collections", () => {
       },
     });
   });
+
+  test.each([
+    {
+      label: "two non-empty iterables",
+      first: [1, 2],
+      rest: [[3, 4]],
+      expected: [1, 2, 3, 4],
+    },
+    {
+      label: "three non-empty iterables",
+      first: [1],
+      rest: [[2], [3]],
+      expected: [1, 2, 3],
+    },
+    {
+      label: "one empty and one non-empty",
+      first: [] as number[],
+      rest: [[1, 2]],
+      expected: [1, 2],
+    },
+    {
+      label: "all empty",
+      first: [] as number[],
+      rest: [[]],
+      expected: [],
+    },
+    {
+      label: "no additional iterables",
+      first: [1, 2, 3],
+      rest: [],
+      expected: [1, 2, 3],
+    },
+  ])("should concat $label", async ({ first, rest, expected }) => {
+    const result = await Asynkit.fromArray(first)
+      .concat(...rest.map((r) => Asynkit.fromArray(r)))
+      .toArray();
+    expect(result).toEqual(expected);
+  });
 });

@@ -257,3 +257,17 @@ export function asynkitToObject<TInput, TKey extends keyof TInput>(
 export function asynkitSum(it: AsyncIterable<number>): Promise<number> {
   return asynkitReduce(it, (sum, num) => sum + num, 0);
 }
+
+/**
+ * Concatenate multiple async iterables into one
+ * @param iterables
+ */
+export async function* asynkitConcat<TInput>(
+  ...iterables: ReadonlyArray<AsyncIterable<TInput>>
+): AsyncIterable<TInput> {
+  for (const it of iterables) {
+    for await (const item of it) {
+      yield item;
+    }
+  }
+}

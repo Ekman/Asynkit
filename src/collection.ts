@@ -9,6 +9,7 @@ import type {
 import {
   asynkitAppend,
   asynkitChunk,
+  asynkitConcat,
   asynkitEvery,
   asynkitFilter,
   asynkitFirst,
@@ -164,5 +165,12 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
     keySelector: KeySelector<TInput>,
   ): Promise<Record<TKey, TInput>> {
     return asynkitToObject(this.it, keySelector);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  concat(...iterables: ReadonlyArray<AsyncIterable<TInput>>): AsynkitInterface<TInput> {
+    return new Asynkit(asynkitConcat(this.it, ...iterables));
   }
 }
