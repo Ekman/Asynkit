@@ -6,6 +6,8 @@ import {
   asynkitFilter,
   asynkitFirst,
   asynkitFirstOrDefault,
+  asynkitFlatMap,
+  asynkitFlatten,
   asynkitFromArray,
   asynkitFromIterable,
   asynkitMap,
@@ -105,7 +107,7 @@ describe("functions", () => {
       (it) => asynkitAppend(it, 100),
     );
 
-    expect(result).toEqual([100, 1, 2, 3, 4]);
+    expect(result).toEqual([1, 2, 3, 4, 100]);
   });
 
   it("should be able to prepend a value", async () => {
@@ -114,7 +116,7 @@ describe("functions", () => {
       (it) => asynkitPrepend(it, 23),
     );
 
-    expect(result).toEqual([1, 2, 3, 4, 23]);
+    expect(result).toEqual([23, 1, 2, 3, 4]);
   });
 
   it("should be able to test some", async () => {
@@ -167,6 +169,42 @@ describe("functions", () => {
     const sum = await asynkitSum(it);
 
     expect(sum).toEqual(10);
+  });
+
+  test.each([
+    { label: "empty outer", inputs: [] as number[][], expected: [] as number[] },
+    { label: "single inner", inputs: [[1, 2, 3]], expected: [1, 2, 3] },
+    { label: "multiple inner", inputs: [[1, 2], [3, 4], [5]], expected: [1, 2, 3, 4, 5] },
+    { label: "some empty inner", inputs: [[], [1, 2], [], [3]], expected: [1, 2, 3] },
+  ])("should flatten arrays $label", async ({ inputs, expected }) => {
+    const result = await asynkitToArray(
+      asynkitFlatten(asynkitFromArray(inputs)),
+    );
+    expect(result).toEqual(expected);
+  });
+
+  test.each([
+    { label: "empty outer", inputs: [] as number[][], expected: [] as number[] },
+    { label: "single inner", inputs: [[1, 2, 3]], expected: [1, 2, 3] },
+    { label: "multiple inner", inputs: [[1, 2], [3, 4], [5]], expected: [1, 2, 3, 4, 5] },
+    { label: "some empty inner", inputs: [[], [1, 2], [], [3]], expected: [1, 2, 3] },
+  ])("should flatten async iterables $label", async ({ inputs, expected }) => {
+    const result = await asynkitToArray(
+      asynkitFlatten(asynkitFromArray(inputs.map(asynkitFromArray))),
+    );
+    expect(result).toEqual(expected);
+  });
+
+  test.each([
+    { label: "empty", input: [] as number[], map: (x: number) => [x], expected: [] as number[] },
+    { label: "identity", input: [1, 2, 3], map: (x: number) => [x], expected: [1, 2, 3] },
+    { label: "expand each", input: [1, 2], map: (x: number) => [x, x * 10], expected: [1, 10, 2, 20] },
+    { label: "filter via empty", input: [1, 2, 3], map: (x: number) => x === 2 ? [] : [x], expected: [1, 3] },
+  ])("should flatMap $label", async ({ input, map, expected }) => {
+    const result = await asynkitToArray(
+      asynkitFlatMap(asynkitFromArray(input), map),
+    );
+    expect(result).toEqual(expected);
   });
 
   test.each([

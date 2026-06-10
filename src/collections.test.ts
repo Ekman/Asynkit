@@ -91,7 +91,7 @@ describe("collections", () => {
       .append(100)
       .toArray();
 
-    expect(result).toEqual([100, 1, 2, 3, 4]);
+    expect(result).toEqual([1, 2, 3, 4, 100]);
   });
 
   it("should be able to prepend a value", async () => {
@@ -99,7 +99,7 @@ describe("collections", () => {
       .prepend(23)
       .toArray();
 
-    expect(result).toEqual([1, 2, 3, 4, 23]);
+    expect(result).toEqual([23, 1, 2, 3, 4]);
   });
 
   it("should be able to test some", async () => {
@@ -181,6 +181,30 @@ describe("collections", () => {
   ])("should concat $label", async ({ first, rest, expected }) => {
     const result = await Asynkit.fromArray(first)
       .concat(...rest.map((r) => Asynkit.fromArray(r)))
+      .toArray();
+    expect(result).toEqual(expected);
+  });
+
+  test.each([
+    { label: "empty outer", inputs: [] as number[][], expected: [] as number[] },
+    { label: "single inner", inputs: [[1, 2, 3]], expected: [1, 2, 3] },
+    { label: "multiple inner", inputs: [[1, 2], [3, 4], [5]], expected: [1, 2, 3, 4, 5] },
+    { label: "some empty inner", inputs: [[], [1, 2], [], [3]], expected: [1, 2, 3] },
+  ])("should flatten $label", async ({ inputs, expected }) => {
+    const result = await Asynkit.fromArray(inputs)
+      .flatten()
+      .toArray();
+    expect(result).toEqual(expected);
+  });
+
+  test.each([
+    { label: "empty", input: [] as number[], map: (x: number) => [x], expected: [] as number[] },
+    { label: "identity", input: [1, 2, 3], map: (x: number) => [x], expected: [1, 2, 3] },
+    { label: "expand each", input: [1, 2], map: (x: number) => [x, x * 10], expected: [1, 10, 2, 20] },
+    { label: "filter via empty", input: [1, 2, 3], map: (x: number) => x === 2 ? [] : [x], expected: [1, 3] },
+  ])("should flatMap $label", async ({ input, map, expected }) => {
+    const result = await Asynkit.fromArray(input)
+      .flatMap(map)
       .toArray();
     expect(result).toEqual(expected);
   });

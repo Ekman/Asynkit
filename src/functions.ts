@@ -1,4 +1,4 @@
-import { Accumulator, Filter, KeySelector, Map, Predicate } from "./interface";
+import { Accumulator, Filter, KeySelector, Map, Predicate, PromiseOrValue } from "./interface";
 import { AsynkitEmptyError } from "./errors";
 import { utilAssertObjectPropertyType } from "./utils";
 
@@ -149,12 +149,12 @@ export async function* asynkitAppend<TInput>(
   it: AsyncIterable<TInput>,
   ...values: ReadonlyArray<TInput>
 ): AsyncIterable<TInput> {
-  for (const value of values) {
-    yield value;
-  }
-
   for await (const item of it) {
     yield item;
+  }
+
+  for (const value of values) {
+    yield value;
   }
 }
 
@@ -167,12 +167,12 @@ export async function* asynkitPrepend<TInput>(
   it: AsyncIterable<TInput>,
   ...values: ReadonlyArray<TInput>
 ): AsyncIterable<TInput> {
-  for await (const item of it) {
-    yield item;
-  }
-
   for (const value of values) {
     yield value;
+  }
+
+  for await (const item of it) {
+    yield item;
   }
 }
 
@@ -270,4 +270,30 @@ export async function* asynkitConcat<TInput>(
       yield item;
     }
   }
+}
+
+/**
+ * Flatten one level of nested iterables
+ * @param it
+ */
+export async function* asynkitFlatten<TReturn>(
+  it: AsyncIterable<AsyncIterable<TReturn> | Iterable<TReturn>>,
+): AsyncIterable<TReturn> {
+  for await (const inner of it) {
+    for await (const item of inner) {
+      yield item;
+    }
+  }
+}
+
+/**
+ * Map each element to an iterable and flatten one level
+ * @param it
+ * @param map
+ */
+export function asynkitFlatMap<TInput, TReturn>(
+  it: AsyncIterable<TInput>,
+  map: (value: TInput) => PromiseOrValue<AsyncIterable<TReturn> | Iterable<TReturn>>,
+): AsyncIterable<TReturn> {
+  return asynkitFlatten(asynkitMap(it, map));
 }

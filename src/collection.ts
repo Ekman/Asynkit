@@ -5,6 +5,7 @@ import type {
   KeySelector,
   Map,
   Predicate,
+  PromiseOrValue,
 } from "./interface";
 import {
   asynkitAppend,
@@ -14,6 +15,8 @@ import {
   asynkitFilter,
   asynkitFirst,
   asynkitFirstOrDefault,
+  asynkitFlatMap,
+  asynkitFlatten,
   asynkitFromArray,
   asynkitFromIterable,
   asynkitIsEmpty,
@@ -172,5 +175,19 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
    */
   concat(...iterables: ReadonlyArray<AsyncIterable<TInput>>): AsynkitInterface<TInput> {
     return new Asynkit(asynkitConcat(this.it, ...iterables));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  flatten<TReturn>(this: Asynkit<AsyncIterable<TReturn> | Iterable<TReturn>>): AsynkitInterface<TReturn> {
+    return new Asynkit(asynkitFlatten<TReturn>(this.it));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  flatMap<TReturn>(map: Map<TInput, PromiseOrValue<AsyncIterable<TReturn> | Iterable<TReturn>>>): AsynkitInterface<TReturn> {
+    return new Asynkit(asynkitFlatMap(this.it, map));
   }
 }
