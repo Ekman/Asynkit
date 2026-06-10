@@ -287,6 +287,22 @@ export async function* asynkitFlatten<TReturn>(
 }
 
 /**
+ * Yield at most count elements
+ * @param it
+ * @param count
+ */
+export async function* asynkitLimit<TInput>(
+  it: AsyncIterable<TInput> | Iterable<TInput>,
+  count: number,
+): AsyncIterable<TInput> {
+  let i = 0;
+  for await (const value of it) {
+    if (i++ >= count) break;
+    yield value;
+  }
+}
+
+/**
  * Map each element to an iterable and flatten one level
  * @param it
  * @param map

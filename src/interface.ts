@@ -114,4 +114,10 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
    * @param map
    */
   flatMap<TReturn>(map: Map<TInput, AsyncIterable<TReturn> | Iterable<TReturn>>): AsynkitInterface<TReturn>;
+
+  /**
+   * Yield at most count elements
+   * @param count
+   */
+  limit(count: number): AsynkitInterface<TInput>;
 }

@@ -17,6 +17,7 @@ import {
   asynkitFirstOrDefault,
   asynkitFlatMap,
   asynkitFlatten,
+  asynkitLimit,
   asynkitFromArray,
   asynkitFromIterable,
   asynkitIsEmpty,
@@ -189,5 +190,12 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
    */
   flatMap<TReturn>(map: Map<TInput, AsyncIterable<TReturn> | Iterable<TReturn>>): AsynkitInterface<TReturn> {
     return new Asynkit(asynkitFlatMap(this.it, map));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  limit(count: number): AsynkitInterface<TInput> {
+    return new Asynkit(asynkitLimit(this.it, count));
   }
 }
