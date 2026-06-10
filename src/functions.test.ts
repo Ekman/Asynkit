@@ -10,6 +10,7 @@ import {
   asynkitFlatten,
   asynkitFromArray,
   asynkitFromIterable,
+  asynkitLimit,
   asynkitMap,
   asynkitPrepend,
   asynkitReduce,
@@ -172,6 +173,17 @@ describe("functions", () => {
   });
 
   test.each([
+    { label: "more than available", input: [1, 2, 3], count: 10, expected: [1, 2, 3] },
+    { label: "exact count", input: [1, 2, 3], count: 3, expected: [1, 2, 3] },
+    { label: "fewer than available", input: [1, 2, 3, 4, 5], count: 3, expected: [1, 2, 3] },
+    { label: "zero", input: [1, 2, 3], count: 0, expected: [] as number[] },
+    { label: "empty input", input: [] as number[], count: 5, expected: [] as number[] },
+  ])("should limit $label", async ({ input, count, expected }) => {
+    const result = await asynkitToArray(asynkitLimit(asynkitFromArray(input), count));
+    expect(result).toEqual(expected);
+  });
+
+  test.each([
     { label: "empty outer", inputs: [] as number[][], expected: [] as number[] },
     { label: "single inner", inputs: [[1, 2, 3]], expected: [1, 2, 3] },
     { label: "multiple inner", inputs: [[1, 2], [3, 4], [5]], expected: [1, 2, 3, 4, 5] },
@@ -213,6 +225,7 @@ describe("functions", () => {
       { label: "filter", fn: (it: Iterable<number>) => asynkitFilter(it, (x) => x % 2 === 0), input: [1, 2, 3, 4], expected: [2, 4] },
       { label: "append", fn: (it: Iterable<number>) => asynkitAppend(it, 99), input: [1, 2], expected: [1, 2, 99] },
       { label: "prepend", fn: (it: Iterable<number>) => asynkitPrepend(it, 0), input: [1, 2], expected: [0, 1, 2] },
+      { label: "limit", fn: (it: Iterable<number>) => asynkitLimit(it, 2), input: [1, 2, 3], expected: [1, 2] },
     ])("$label accepts Iterable", async ({ fn, input, expected }) => {
       expect(await asynkitToArray(fn(input))).toEqual(expected);
     });
