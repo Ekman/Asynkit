@@ -102,7 +102,7 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
    * Concatenate with other async iterables
    * @param iterables
    */
-  concat(...iterables: ReadonlyArray<AsyncIterable<TInput>>): AsynkitInterface<TInput>;
+  concat(...iterables: ReadonlyArray<AsyncIterable<TInput> | Iterable<TInput>>): AsynkitInterface<TInput>;
 
   /**
    * Flatten one level of nested iterables
@@ -113,5 +113,5 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
    * Map each element to an iterable and flatten one level
    * @param map
    */
-  flatMap<TReturn>(map: Map<TInput, PromiseOrValue<AsyncIterable<TReturn> | Iterable<TReturn>>>): AsynkitInterface<TReturn>;
+  flatMap<TReturn>(map: Map<TInput, AsyncIterable<TReturn> | Iterable<TReturn>>): AsynkitInterface<TReturn>;
 }

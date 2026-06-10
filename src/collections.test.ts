@@ -9,6 +9,11 @@ describe("collections", () => {
     expect(result).toEqual(["a", "b", "c"]);
   });
 
+  it("should be able to create from a sync iterable via create", async () => {
+    const result = await Asynkit.create(new Set([1, 2, 3])).toArray();
+    expect(result).toEqual([1, 2, 3]);
+  });
+
   it("should be able to create from an iterable", async () => {
     const result = await Asynkit.fromIterable(["a", "b", "c"])
       .toArray();
@@ -183,6 +188,11 @@ describe("collections", () => {
       .concat(...rest.map((r) => Asynkit.fromArray(r)))
       .toArray();
     expect(result).toEqual(expected);
+  });
+
+  it("concat accepts sync iterables", async () => {
+    const result = await Asynkit.fromArray([1, 2]).concat([3, 4]).toArray();
+    expect(result).toEqual([1, 2, 3, 4]);
   });
 
   test.each([

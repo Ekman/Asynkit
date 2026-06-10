@@ -207,6 +207,45 @@ describe("functions", () => {
     expect(result).toEqual(expected);
   });
 
+  describe("with sync iterable input", () => {
+    test.each([
+      { label: "map", fn: (it: Iterable<number>) => asynkitMap(it, (x) => x * 2), input: [1, 2, 3], expected: [2, 4, 6] },
+      { label: "filter", fn: (it: Iterable<number>) => asynkitFilter(it, (x) => x % 2 === 0), input: [1, 2, 3, 4], expected: [2, 4] },
+      { label: "append", fn: (it: Iterable<number>) => asynkitAppend(it, 99), input: [1, 2], expected: [1, 2, 99] },
+      { label: "prepend", fn: (it: Iterable<number>) => asynkitPrepend(it, 0), input: [1, 2], expected: [0, 1, 2] },
+    ])("$label accepts Iterable", async ({ fn, input, expected }) => {
+      expect(await asynkitToArray(fn(input))).toEqual(expected);
+    });
+
+    it("toArray accepts Iterable", async () => {
+      expect(await asynkitToArray([1, 2, 3])).toEqual([1, 2, 3]);
+    });
+
+    it("concat accepts Iterables", async () => {
+      expect(await asynkitToArray(asynkitConcat([1, 2], [3, 4]))).toEqual([1, 2, 3, 4]);
+    });
+
+    it("flatten accepts Iterable outer", async () => {
+      expect(await asynkitToArray(asynkitFlatten([[1, 2], [3, 4]]))).toEqual([1, 2, 3, 4]);
+    });
+
+    it("flatMap accepts Iterable", async () => {
+      expect(await asynkitToArray(asynkitFlatMap([1, 2], (x) => [x, x * 10]))).toEqual([1, 10, 2, 20]);
+    });
+
+    it("reduce accepts Iterable", async () => {
+      expect(await asynkitReduce([1, 2, 3], (acc, x) => acc + x, 0)).toEqual(6);
+    });
+
+    it("some accepts Iterable", async () => {
+      expect(await asynkitSome([1, 2, 3], (x) => x === 2)).toBe(true);
+    });
+
+    it("every accepts Iterable", async () => {
+      expect(await asynkitEvery([2, 2, 2], (x) => x === 2)).toBe(true);
+    });
+  });
+
   test.each([
     {
       label: "two non-empty iterables",
