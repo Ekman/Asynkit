@@ -1,14 +1,12 @@
-export type PromiseOrValue<T> = Promise<T> | T;
-export type Predicate<TInput> = (value: TInput) => PromiseOrValue<boolean>;
-export type Map<TInput, TReturn> = (value: TInput) => PromiseOrValue<TReturn>;
-export type Filter<TInput, TReturn extends TInput = TInput> =
-	| ((item: TInput) => item is TReturn)
-	| Predicate<TInput>;
-export type Accumulator<TInput, TReturn> = (
-	acc: TReturn,
-	item: TInput,
-) => PromiseOrValue<TReturn>;
-export type KeySelector<TInput> = (item: TInput) => TInput[keyof TInput];
+import type {
+	Accumulator,
+	AsyncOrIterable,
+	Filter,
+	KeySelector,
+	Map,
+	Predicate,
+	PromiseOrValue,
+} from "./types";
 
 /**
  * Acts as an async iterable and adds chainable operations
@@ -103,14 +101,14 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
 	 * @param iterables
 	 */
 	concat(
-		...iterables: ReadonlyArray<AsyncIterable<TInput> | Iterable<TInput>>
+		...iterables: ReadonlyArray<AsyncOrIterable<TInput>>
 	): AsynkitInterface<TInput>;
 
 	/**
 	 * Flatten one level of nested iterables
 	 */
 	flatten<TReturn>(
-		this: AsynkitInterface<AsyncIterable<TReturn> | Iterable<TReturn>>,
+		this: AsynkitInterface<AsyncOrIterable<TReturn>>,
 	): AsynkitInterface<TReturn>;
 
 	/**
@@ -118,7 +116,7 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
 	 * @param map
 	 */
 	flatMap<TReturn>(
-		map: Map<TInput, AsyncIterable<TReturn> | Iterable<TReturn>>,
+		map: Map<TInput, AsyncOrIterable<TReturn>>,
 	): AsynkitInterface<TReturn>;
 
 	/**

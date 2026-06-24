@@ -1,11 +1,12 @@
 import {
 	Accumulator,
+	AsyncOrIterable,
 	Filter,
 	KeySelector,
 	Map,
 	Predicate,
 	PromiseOrValue,
-} from "./interface";
+} from "./types";
 import { AsynkitEmptyError } from "./errors";
 import { utilAssertObjectPropertyType } from "./utils";
 
@@ -38,7 +39,7 @@ export async function* asynkitFromIterable<TInput>(
  * @param map
  */
 export async function* asynkitMap<TInput, TReturn>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	map: Map<TInput, TReturn>,
 ): AsyncIterable<TReturn> {
 	for await (const value of it) {
@@ -52,7 +53,7 @@ export async function* asynkitMap<TInput, TReturn>(
  * @param filter
  */
 export async function* asynkitFilter<TInput, TReturn extends TInput = TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	filter: Filter<TInput>,
 ): AsyncIterable<TReturn> {
 	for await (const value of it) {
@@ -68,7 +69,7 @@ export async function* asynkitFilter<TInput, TReturn extends TInput = TInput>(
  * @param it
  */
 export async function asynkitToArray<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 ): Promise<TInput[]> {
 	const array = [];
 
@@ -85,7 +86,7 @@ export async function asynkitToArray<TInput>(
  * @param def
  */
 export async function asynkitFirstOrDefault<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	def?: TInput,
 ): Promise<TInput | undefined> {
 	for await (const value of it) {
@@ -101,7 +102,7 @@ export async function asynkitFirstOrDefault<TInput>(
  * @throws {AsynkitEmptyError}
  */
 export async function asynkitFirst<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 ): Promise<TInput> {
 	const first = await asynkitFirstOrDefault(it, undefined);
 
@@ -117,7 +118,7 @@ export async function asynkitFirst<TInput>(
  * @param it
  */
 export async function asynkitIsEmpty<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 ): Promise<boolean> {
 	return Boolean(await asynkitFirstOrDefault(it, undefined));
 }
@@ -128,7 +129,7 @@ export async function asynkitIsEmpty<TInput>(
  * @param chunkSize
  */
 export async function* asynkitChunk<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	chunkSize: number,
 ): AsyncIterable<TInput[]> {
 	let chunk: TInput[] = [];
@@ -153,7 +154,7 @@ export async function* asynkitChunk<TInput>(
  * @param values
  */
 export async function* asynkitAppend<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	...values: ReadonlyArray<TInput>
 ): AsyncIterable<TInput> {
 	for await (const item of it) {
@@ -171,7 +172,7 @@ export async function* asynkitAppend<TInput>(
  * @param values
  */
 export async function* asynkitPrepend<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	...values: ReadonlyArray<TInput>
 ): AsyncIterable<TInput> {
 	for (const value of values) {
@@ -189,7 +190,7 @@ export async function* asynkitPrepend<TInput>(
  * @param predicate
  */
 export async function asynkitSome<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	predicate: Predicate<TInput>,
 ): Promise<boolean> {
 	for await (const item of it) {
@@ -207,7 +208,7 @@ export async function asynkitSome<TInput>(
  * @param predicate
  */
 export async function asynkitEvery<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	predicate: Predicate<TInput>,
 ): Promise<boolean> {
 	for await (const item of it) {
@@ -226,7 +227,7 @@ export async function asynkitEvery<TInput>(
  * @param start
  */
 export async function asynkitReduce<TInput, TReturn>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	aggregator: Accumulator<TInput, TReturn>,
 	start: TReturn,
 ): Promise<TReturn> {
@@ -243,7 +244,7 @@ export async function asynkitReduce<TInput, TReturn>(
  * @param keySelector
  */
 export function asynkitToObject<TInput, TKey extends keyof TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	keySelector: KeySelector<TInput>,
 ): Promise<Record<TKey, TInput>> {
 	return asynkitReduce(
@@ -262,7 +263,7 @@ export function asynkitToObject<TInput, TKey extends keyof TInput>(
  * @param it
  */
 export function asynkitSum(
-	it: AsyncIterable<number> | Iterable<number>,
+	it: AsyncOrIterable<number>,
 ): Promise<number> {
 	return asynkitReduce(it, (sum, num) => sum + num, 0);
 }
@@ -272,7 +273,7 @@ export function asynkitSum(
  * @param iterables
  */
 export async function* asynkitConcat<TInput>(
-	...iterables: ReadonlyArray<AsyncIterable<TInput> | Iterable<TInput>>
+	...iterables: ReadonlyArray<AsyncOrIterable<TInput>>
 ): AsyncIterable<TInput> {
 	for (const it of iterables) {
 		for await (const item of it) {
@@ -287,8 +288,8 @@ export async function* asynkitConcat<TInput>(
  */
 export async function* asynkitFlatten<TReturn>(
 	it:
-		| AsyncIterable<AsyncIterable<TReturn> | Iterable<TReturn>>
-		| Iterable<AsyncIterable<TReturn> | Iterable<TReturn>>,
+		| AsyncIterable<AsyncOrIterable<TReturn>>
+		| Iterable<AsyncOrIterable<TReturn>>,
 ): AsyncIterable<TReturn> {
 	for await (const inner of it) {
 		for await (const item of inner) {
@@ -303,7 +304,7 @@ export async function* asynkitFlatten<TReturn>(
  * @param count
  */
 export async function* asynkitLimit<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	count: number,
 ): AsyncIterable<TInput> {
 	let i = 0;
@@ -319,10 +320,10 @@ export async function* asynkitLimit<TInput>(
  * @param map
  */
 export function asynkitFlatMap<TInput, TReturn>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	map: (
 		value: TInput,
-	) => PromiseOrValue<AsyncIterable<TReturn> | Iterable<TReturn>>,
+	) => PromiseOrValue<AsyncOrIterable<TReturn>>,
 ): AsyncIterable<TReturn> {
 	return asynkitFlatten(asynkitMap(it, map));
 }
@@ -332,7 +333,7 @@ export function asynkitFlatMap<TInput, TReturn>(
  * @param fn
  */
 export async function* asynkitEach<TInput>(
-	it: AsyncIterable<TInput> | Iterable<TInput>,
+	it: AsyncOrIterable<TInput>,
 	fn: (value: TInput) => PromiseOrValue<void>,
 ): AsyncIterable<TInput> {
 	for await (const value of it) {

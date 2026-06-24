@@ -1,12 +1,13 @@
+import type { AsynkitInterface } from "./interface";
 import type {
   Accumulator,
-  AsynkitInterface,
+  AsyncOrIterable,
   Filter,
   KeySelector,
   Map,
   Predicate,
   PromiseOrValue,
-} from "./interface";
+} from "./types";
 import {
   asynkitAppend,
   asynkitChunk,
@@ -33,14 +34,14 @@ import {
  * Main implementation of an async collection
  */
 export class Asynkit<TInput> implements AsynkitInterface<TInput> {
-  constructor(private readonly it: AsyncIterable<TInput> | Iterable<TInput>) {
+  constructor(private readonly it: AsyncOrIterable<TInput>) {
   }
 
   /**
    * Create a new instance and return an interface
    * @param it
    */
-  static create<TInput>(it: AsyncIterable<TInput> | Iterable<TInput>): AsynkitInterface<TInput> {
+  static create<TInput>(it: AsyncOrIterable<TInput>): AsynkitInterface<TInput> {
     if (it instanceof Asynkit) {
       return it;
     }
@@ -174,21 +175,21 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
   /**
    * @inheritDoc
    */
-  concat(...iterables: ReadonlyArray<AsyncIterable<TInput> | Iterable<TInput>>): AsynkitInterface<TInput> {
+  concat(...iterables: ReadonlyArray<AsyncOrIterable<TInput>>): AsynkitInterface<TInput> {
     return new Asynkit(asynkitConcat(this.it, ...iterables));
   }
 
   /**
    * @inheritDoc
    */
-  flatten<TReturn>(this: Asynkit<AsyncIterable<TReturn> | Iterable<TReturn>>): AsynkitInterface<TReturn> {
+  flatten<TReturn>(this: Asynkit<AsyncOrIterable<TReturn>>): AsynkitInterface<TReturn> {
     return new Asynkit(asynkitFlatten<TReturn>(this.it));
   }
 
   /**
    * @inheritDoc
    */
-  flatMap<TReturn>(map: Map<TInput, AsyncIterable<TReturn> | Iterable<TReturn>>): AsynkitInterface<TReturn> {
+  flatMap<TReturn>(map: Map<TInput, AsyncOrIterable<TReturn>>): AsynkitInterface<TReturn> {
     return new Asynkit(asynkitFlatMap(this.it, map));
   }
 
