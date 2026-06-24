@@ -2,11 +2,11 @@ export type PromiseOrValue<T> = Promise<T> | T;
 export type Predicate<TInput> = (value: TInput) => PromiseOrValue<boolean>;
 export type Map<TInput, TReturn> = (value: TInput) => PromiseOrValue<TReturn>;
 export type Filter<TInput, TReturn extends TInput = TInput> =
-  | ((item: TInput) => item is TReturn)
-  | Predicate<TInput>;
+	| ((item: TInput) => item is TReturn)
+	| Predicate<TInput>;
 export type Accumulator<TInput, TReturn> = (
-  acc: TReturn,
-  item: TInput,
+	acc: TReturn,
+	item: TInput,
 ) => PromiseOrValue<TReturn>;
 export type KeySelector<TInput> = (item: TInput) => TInput[keyof TInput];
 
@@ -14,110 +14,122 @@ export type KeySelector<TInput> = (item: TInput) => TInput[keyof TInput];
  * Acts as an async iterable and adds chainable operations
  */
 export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
-  /**
-   * Convert the input into a new value
-   * @param map
-   */
-  map<TReturn>(map: Map<TInput, TReturn>): AsynkitInterface<TReturn>;
+	/**
+	 * Convert the input into a new value
+	 * @param map
+	 */
+	map<TReturn>(map: Map<TInput, TReturn>): AsynkitInterface<TReturn>;
 
-  /**
-   * Only include values that pass the filter
-   * @param filter
-   */
-  filter<TReturn extends TInput = TInput>(
-    filter: Filter<TInput, TReturn>,
-  ): AsynkitInterface<TReturn>;
+	/**
+	 * Only include values that pass the filter
+	 * @param filter
+	 */
+	filter<TReturn extends TInput = TInput>(
+		filter: Filter<TInput, TReturn>,
+	): AsynkitInterface<TReturn>;
 
-  /**
-   * Convert to an array
-   */
-  toArray(): Promise<TInput[]>;
+	/**
+	 * Convert to an array
+	 */
+	toArray(): Promise<TInput[]>;
 
-  /**
-   * Get the first value or return a default value
-   * @param def
-   */
-  firstOrDefault(def?: TInput): Promise<TInput | undefined>;
+	/**
+	 * Get the first value or return a default value
+	 * @param def
+	 */
+	firstOrDefault(def?: TInput): Promise<TInput | undefined>;
 
-  /**
-   * Get the first value or throw an exception
-   * @throws {AsynkitEmptyError}
-   */
-  first(): Promise<TInput>;
+	/**
+	 * Get the first value or throw an exception
+	 * @throws {AsynkitEmptyError}
+	 */
+	first(): Promise<TInput>;
 
-  /**
-   * Check if empty or not
-   */
-  isEmpty(): Promise<boolean>;
+	/**
+	 * Check if empty or not
+	 */
+	isEmpty(): Promise<boolean>;
 
-  /**
-   * Split the async iterable into arrays with max size of chunkSize
-   * @param chunkSize
-   */
-  chunk(chunkSize: number): AsynkitInterface<TInput[]>;
+	/**
+	 * Split the async iterable into arrays with max size of chunkSize
+	 * @param chunkSize
+	 */
+	chunk(chunkSize: number): AsynkitInterface<TInput[]>;
 
-  /**
-   * Append a value
-   * @param values
-   */
-  append(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput>;
+	/**
+	 * Append a value
+	 * @param values
+	 */
+	append(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput>;
 
-  /**
-   * Prepend a value
-   * @param values
-   */
-  prepend(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput>;
+	/**
+	 * Prepend a value
+	 * @param values
+	 */
+	prepend(...values: ReadonlyArray<TInput>): AsynkitInterface<TInput>;
 
-  /**
-   * Check if at least one value fulfills the predicate
-   * @param predicate
-   */
-  some(predicate: Predicate<TInput>): Promise<boolean>;
+	/**
+	 * Check if at least one value fulfills the predicate
+	 * @param predicate
+	 */
+	some(predicate: Predicate<TInput>): Promise<boolean>;
 
-  /**
-   * Check if all values fulfills the predicate
-   * @param predicate
-   */
-  every(predicate: Predicate<TInput>): Promise<boolean>;
+	/**
+	 * Check if all values fulfills the predicate
+	 * @param predicate
+	 */
+	every(predicate: Predicate<TInput>): Promise<boolean>;
 
-  /**
-   * Reduce the async iterable to one value
-   * @param acc
-   * @param start
-   */
-  reduce<TReturn>(
-    acc: Accumulator<TInput, TReturn>,
-    start: TReturn,
-  ): Promise<TReturn>;
+	/**
+	 * Reduce the async iterable to one value
+	 * @param acc
+	 * @param start
+	 */
+	reduce<TReturn>(
+		acc: Accumulator<TInput, TReturn>,
+		start: TReturn,
+	): Promise<TReturn>;
 
-  /**
-   * Convert the async iterable to an object
-   * @param keySelector
-   */
-  toObject<TKey extends keyof TInput>(
-    keySelector: KeySelector<TInput>,
-  ): Promise<Record<TKey, TInput>>;
+	/**
+	 * Convert the async iterable to an object
+	 * @param keySelector
+	 */
+	toObject<TKey extends keyof TInput>(
+		keySelector: KeySelector<TInput>,
+	): Promise<Record<TKey, TInput>>;
 
-  /**
-   * Concatenate with other async iterables
-   * @param iterables
-   */
-  concat(...iterables: ReadonlyArray<AsyncIterable<TInput> | Iterable<TInput>>): AsynkitInterface<TInput>;
+	/**
+	 * Concatenate with other async iterables
+	 * @param iterables
+	 */
+	concat(
+		...iterables: ReadonlyArray<AsyncIterable<TInput> | Iterable<TInput>>
+	): AsynkitInterface<TInput>;
 
-  /**
-   * Flatten one level of nested iterables
-   */
-  flatten<TReturn>(this: AsynkitInterface<AsyncIterable<TReturn> | Iterable<TReturn>>): AsynkitInterface<TReturn>;
+	/**
+	 * Flatten one level of nested iterables
+	 */
+	flatten<TReturn>(
+		this: AsynkitInterface<AsyncIterable<TReturn> | Iterable<TReturn>>,
+	): AsynkitInterface<TReturn>;
 
-  /**
-   * Map each element to an iterable and flatten one level
-   * @param map
-   */
-  flatMap<TReturn>(map: Map<TInput, AsyncIterable<TReturn> | Iterable<TReturn>>): AsynkitInterface<TReturn>;
+	/**
+	 * Map each element to an iterable and flatten one level
+	 * @param map
+	 */
+	flatMap<TReturn>(
+		map: Map<TInput, AsyncIterable<TReturn> | Iterable<TReturn>>,
+	): AsynkitInterface<TReturn>;
 
-  /**
-   * Yield at most count elements
-   * @param count
-   */
-  limit(count: number): AsynkitInterface<TInput>;
+	/**
+	 * Yield at most count elements
+	 * @param count
+	 */
+	limit(count: number): AsynkitInterface<TInput>;
+
+	/**
+	 * Loop through each item
+	 * @param fn
+	 */
+	each(fn: (value: TInput) => PromiseOrValue<void>): AsynkitInterface<TInput>;
 }

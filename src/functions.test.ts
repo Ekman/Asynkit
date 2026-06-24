@@ -2,6 +2,7 @@ import { describe, expect, it, test } from "vitest";
 import {
   asynkitAppend,
   asynkitConcat,
+  asynkitEach,
   asynkitEvery,
   asynkitFilter,
   asynkitFirst,
@@ -219,6 +220,39 @@ describe("functions", () => {
     expect(result).toEqual(expected);
   });
 
+  test.each([
+    { label: "empty", input: [] as number[], expected: [] as number[] },
+    { label: "single", input: [1], expected: [1] },
+    { label: "multiple", input: [1, 2, 3], expected: [1, 2, 3] },
+  ])("should pass values through unchanged on each $label", async ({ input, expected }) => {
+    const result = await asynkitToArray(
+      asynkitEach(asynkitFromArray(input), () => {}),
+    );
+    expect(result).toEqual(expected);
+  });
+
+  it("should invoke the callback for each value in order", async () => {
+    const seen: number[] = [];
+    await asynkitToArray(
+      asynkitEach(asynkitFromArray([1, 2, 3]), (value) => {
+        seen.push(value);
+      }),
+    );
+    expect(seen).toEqual([1, 2, 3]);
+  });
+
+  it("should await an async callback before yielding", async () => {
+    const seen: number[] = [];
+    const result = await asynkitToArray(
+      asynkitEach(asynkitFromArray([1, 2, 3]), async (value) => {
+        await Promise.resolve();
+        seen.push(value);
+      }),
+    );
+    expect(seen).toEqual([1, 2, 3]);
+    expect(result).toEqual([1, 2, 3]);
+  });
+
   describe("with sync iterable input", () => {
     test.each([
       { label: "map", fn: (it: Iterable<number>) => asynkitMap(it, (x) => x * 2), input: [1, 2, 3], expected: [2, 4, 6] },
@@ -226,6 +260,7 @@ describe("functions", () => {
       { label: "append", fn: (it: Iterable<number>) => asynkitAppend(it, 99), input: [1, 2], expected: [1, 2, 99] },
       { label: "prepend", fn: (it: Iterable<number>) => asynkitPrepend(it, 0), input: [1, 2], expected: [0, 1, 2] },
       { label: "limit", fn: (it: Iterable<number>) => asynkitLimit(it, 2), input: [1, 2, 3], expected: [1, 2] },
+      { label: "each", fn: (it: Iterable<number>) => asynkitEach(it, () => {}), input: [1, 2, 3], expected: [1, 2, 3] },
     ])("$label accepts Iterable", async ({ fn, input, expected }) => {
       expect(await asynkitToArray(fn(input))).toEqual(expected);
     });
