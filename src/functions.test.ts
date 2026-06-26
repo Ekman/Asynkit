@@ -13,6 +13,7 @@ import {
   asynkitFromIterable,
   asynkitLimit,
   asynkitMap,
+  asynkitParallelMap,
   asynkitPrepend,
   asynkitReduce,
   asynkitSome,
@@ -253,6 +254,50 @@ describe("functions", () => {
     expect(result).toEqual([1, 2, 3]);
   });
 
+  test.each([
+    { label: "empty", input: [] as number[], chunkSize: 2, expected: [] as number[] },
+    { label: "chunk smaller than input", input: [1, 2, 3, 4, 5], chunkSize: 2, expected: [2, 4, 6, 8, 10] },
+    { label: "chunk equal to input", input: [1, 2, 3], chunkSize: 3, expected: [2, 4, 6] },
+    { label: "chunk larger than input", input: [1, 2, 3], chunkSize: 10, expected: [2, 4, 6] },
+  ])("should map preserving order $label", async ({ input, chunkSize, expected }) => {
+    const result = await asynkitToArray(
+      asynkitParallelMap(asynkitFromArray(input), chunkSize, (x) => x * 2),
+    );
+    expect(result).toEqual(expected);
+  });
+
+  it("should run map concurrently within a chunk", async () => {
+    const events: string[] = [];
+    const work = (value: number) => {
+      events.push(`start ${value}`);
+      return new Promise<number>((resolve) =>
+        setTimeout(() => {
+          events.push(`end ${value}`);
+          resolve(value);
+        }, 40),
+      );
+    };
+
+    const start = Date.now();
+    const result = await asynkitToArray(
+      asynkitParallelMap(asynkitFromArray([1, 2, 3, 4]), 2, work),
+    );
+    const elapsed = Date.now() - start;
+
+    expect(result).toEqual([1, 2, 3, 4]);
+    expect(events).toEqual([
+      "start 1",
+      "start 2",
+      "end 1",
+      "end 2",
+      "start 3",
+      "start 4",
+      "end 3",
+      "end 4",
+    ]);
+    expect(elapsed).toBeLessThan(160);
+  });
+
   describe("with sync iterable input", () => {
     test.each([
       { label: "map", fn: (it: Iterable<number>) => asynkitMap(it, (x) => x * 2), input: [1, 2, 3], expected: [2, 4, 6] },
@@ -261,6 +306,7 @@ describe("functions", () => {
       { label: "prepend", fn: (it: Iterable<number>) => asynkitPrepend(it, 0), input: [1, 2], expected: [0, 1, 2] },
       { label: "limit", fn: (it: Iterable<number>) => asynkitLimit(it, 2), input: [1, 2, 3], expected: [1, 2] },
       { label: "each", fn: (it: Iterable<number>) => asynkitEach(it, () => {}), input: [1, 2, 3], expected: [1, 2, 3] },
+      { label: "parallelMap", fn: (it: Iterable<number>) => asynkitParallelMap(it, 2, (x) => x), input: [1, 2, 3], expected: [1, 2, 3] },
     ])("$label accepts Iterable", async ({ fn, input, expected }) => {
       expect(await asynkitToArray(fn(input))).toEqual(expected);
     });

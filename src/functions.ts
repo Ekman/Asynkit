@@ -262,9 +262,7 @@ export function asynkitToObject<TInput, TKey extends keyof TInput>(
  * Summarize numbers from an async iterable
  * @param it
  */
-export function asynkitSum(
-	it: AsyncOrIterable<number>,
-): Promise<number> {
+export function asynkitSum(it: AsyncOrIterable<number>): Promise<number> {
 	return asynkitReduce(it, (sum, num) => sum + num, 0);
 }
 
@@ -321,15 +319,14 @@ export async function* asynkitLimit<TInput>(
  */
 export function asynkitFlatMap<TInput, TReturn>(
 	it: AsyncOrIterable<TInput>,
-	map: (
-		value: TInput,
-	) => PromiseOrValue<AsyncOrIterable<TReturn>>,
+	map: (value: TInput) => PromiseOrValue<AsyncOrIterable<TReturn>>,
 ): AsyncIterable<TReturn> {
 	return asynkitFlatten(asynkitMap(it, map));
 }
 
 /**
  * Loop through each item
+ * @param it
  * @param fn
  */
 export async function* asynkitEach<TInput>(
@@ -340,4 +337,22 @@ export async function* asynkitEach<TInput>(
 		await fn(value);
 		yield value;
 	}
+}
+
+/**
+ * Map each value with map, running map concurrently within batches of chunkSize
+ * @param it
+ * @param chunkSize
+ * @param map
+ */
+export function asynkitParallelMap<TInput, TReturn>(
+	it: AsyncOrIterable<TInput>,
+	chunkSize: number,
+	map: Map<TInput, TReturn>,
+): AsyncIterable<TReturn> {
+	const chunk = asynkitChunk(it, chunkSize);
+
+	return asynkitFlatMap(chunk, (chunk) =>
+		Promise.all(chunk.map((item) => map(item))),
+	);
 }

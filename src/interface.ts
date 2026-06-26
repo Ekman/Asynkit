@@ -130,4 +130,14 @@ export interface AsynkitInterface<TInput> extends AsyncIterable<TInput> {
 	 * @param fn
 	 */
 	each(fn: (value: TInput) => PromiseOrValue<void>): AsynkitInterface<TInput>;
+
+	/**
+	 * Map each value, running map concurrently within batches of chunkSize
+	 * @param chunkSize
+	 * @param map
+	 */
+	parallelMap<TReturn>(
+		chunkSize: number,
+		map: Map<TInput, TReturn>,
+	): AsynkitInterface<TReturn>;
 }

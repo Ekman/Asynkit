@@ -23,6 +23,7 @@ import {
 	asynkitFromIterable,
 	asynkitIsEmpty,
 	asynkitMap,
+	asynkitParallelMap,
 	asynkitPrepend,
 	asynkitReduce,
 	asynkitSome,
@@ -211,5 +212,15 @@ export class Asynkit<TInput> implements AsynkitInterface<TInput> {
 	 */
 	each(fn: (value: TInput) => PromiseOrValue<void>): AsynkitInterface<TInput> {
 		return new Asynkit(asynkitEach(this.it, fn));
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	parallelMap<TReturn>(
+		chunkSize: number,
+		map: Map<TInput, TReturn>,
+	): AsynkitInterface<TReturn> {
+		return new Asynkit(asynkitParallelMap(this.it, chunkSize, map));
 	}
 }

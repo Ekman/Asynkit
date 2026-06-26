@@ -218,4 +218,16 @@ describe("collections", () => {
       .toArray();
     expect(result).toEqual(expected);
   });
+
+  test.each([
+    { label: "empty", input: [] as number[], chunkSize: 2, expected: [] as number[] },
+    { label: "chunk smaller than input", input: [1, 2, 3, 4, 5], chunkSize: 2, expected: [2, 4, 6, 8, 10] },
+    { label: "chunk equal to input", input: [1, 2, 3], chunkSize: 3, expected: [2, 4, 6] },
+    { label: "chunk larger than input", input: [1, 2, 3], chunkSize: 10, expected: [2, 4, 6] },
+  ])("should parallelMap preserving order $label", async ({ input, chunkSize, expected }) => {
+    const result = await Asynkit.fromArray(input)
+      .parallelMap(chunkSize, (x) => x * 2)
+      .toArray();
+    expect(result).toEqual(expected);
+  });
 });
